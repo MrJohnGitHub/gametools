@@ -1,0 +1,185 @@
+function mon8700(mon,event,player)
+	-- local nJob = player:get_job();
+	-- local nReLvel = player:get_param(258);
+	-- local nMonRe = 0;
+	-- local nMonRb = 0;
+	-- local nMonRa = 0;
+	-- local nMonRb = 0;
+	-- local nMonRc = 0;
+	-- if player:get_task_state(100) == 2 then
+	-- 	if nReLvel >= 1 then
+	-- 		nMonRe = nReLvel;
+	-- 		nMonRb = nReLvel;
+	-- 	end
+	-- 	local nDc = 35;
+	-- 	local nHp = 35;
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":59,\"y\":83,\"state\":0}");
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":60,\"y\":82,\"state\":0}");
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":57,\"y\":85,\"state\":0}");
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":55,\"y\":87,\"state\":0}");
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":55,\"y\":86,\"state\":0}");
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":56,\"y\":85,\"state\":0}");
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":56,\"y\":86,\"state\":0}");
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":57,\"y\":84,\"state\":0}");
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":58,\"y\":83,\"state\":0}");
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":59,\"y\":82,\"state\":0}");
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":58,\"y\":85,\"state\":0}");
+	-- 	SetMapFlag(61,59,83,0);
+	-- 	SetMapFlag(61,60,82,0);
+	-- 	SetMapFlag(61,57,85,0);
+	-- 	SetMapFlag(61,55,87,0);
+	-- 	SetMapFlag(61,55,86,0);
+	-- 	SetMapFlag(61,56,85,0);
+	-- 	SetMapFlag(61,56,86,0);
+	-- 	SetMapFlag(61,57,84,0);
+	-- 	SetMapFlag(61,58,83,0);
+	-- 	SetMapFlag(61,59,82,0);
+	-- 	player:set_task_state(100,3);
+	-- 	player:push_task_data(1,1);
+	-- 	player:SendPacketToSelf(1471,0,"{\"id\":1}");
+	-- 	player:alert(19,0,0,"城门已经被攻破，请继续前行");
+	-- 	player:autofightstart(61,57,83);
+	-- 	local obj = {};
+	-- 	obj.monNum = 0;
+	-- 	obj.monMax = 18;
+	-- 	obj.action = "击退：";
+	-- 	obj.progress = player:get_task_state(100);
+	-- 	obj.monName = [[<u><a href=%event:task_track_link_monster,61,36,47%><font color=%#00EC00%>(城主禁卫军)</font></a></u>]];
+	-- 	player:SendPacketToSelf(1813,0,encode(obj));
+	-- else
+	-- 	player:alert(19,0,0,"请先完成第一环任务，然后再来击碎城门");
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":58,\"y\":84,\"state\":1}");
+	-- 	local obj = {};
+	-- 	obj[2] = 58;
+	-- 	obj[3] = 84;
+	-- 	obj[4] = 8700;
+	-- 	obj[5] = 35084;
+	-- 	obj[6] = "城门";
+	-- 	obj[7] = 1;
+	-- 	player:mon_gen(encode(obj));
+	-- 	--player:mon_gen(61,58,84,5024,35084,"城门",1,0,0,0,0,0);
+	-- 	player:SendPacketToSelf(1534,0,"{\"mapid\":61,\"x\":58,\"y\":84,\"state\":0}");
+	-- end
+end
+
+function mon8701(mon,event,player)
+	-- if player:get_task_state(100) == 1 then
+	-- 	local obj = {};
+	-- 	if player:get_task_param(100,1) >= 0 then
+	-- 		player:set_task_param(100,1,player:get_task_param(100,1) + 1);
+	-- 		player:push_task_data(1,1);
+	-- 		obj = {};
+	-- 		obj.monNum = player:get_task_param(100,1);
+	-- 		player:SendPacketToSelf(1813,0,encode(obj));
+	-- 		player:alert(19,0,0,"成功击杀一位守门卫士("..player:get_task_param(100,1).."/10)");
+	-- 	end
+	-- 	if player:get_task_param(100,1) == 10 then
+
+	-- 		local obj = {};
+	-- 		obj[2] = 58;
+	-- 		obj[3] = 84;
+	-- 		obj[4] = 8700;
+	-- 		obj[5] = 35084;
+	-- 		obj[6] = "城门";
+	-- 		obj[7] = 1;
+	-- 		player:mon_gen(encode(obj));
+	-- 	--	player:mon_gen(61,58,84,8700,35084,"城门",1,0,0,0,0,0);
+	-- 		player:autofightstart(61,59,84);
+	-- 		player:set_task_state(100,2);
+	-- 		player:push_task_data(1,1);
+	-- 		obj = {};
+	-- 		obj.monNum = 0;
+	-- 		obj.monMax = 1;
+	-- 		obj.action = "攻陷：";
+	-- 		obj.progress = player:get_task_state(100);
+	-- 		obj.monName = [[<u><a href=%event:task_track_link_monster,61,58,84%><font color=%#00EC00%>(城门)</font></a></u>]];
+	-- 		player:SendPacketToSelf(1813,0,encode(obj));
+	-- 		player:alert(19,0,0,"打破城门，我们现在闯入城主府");
+	-- 	end
+	-- end
+end
+
+function mon8705(mon,event,player)
+	-- if player:get_task_state(100) == 3 then
+	-- 	local nDc = 35;
+	-- 	local nHp = 35;
+	-- 	local obj = {};
+	-- 	if player:get_task_param(100,3) >= 0 then
+	-- 		player:set_task_param(100,3,player:get_task_param(100,3) + 1);
+	-- 		player:push_task_data(1,1);
+	-- 		obj = {};
+	-- 		obj.monNum = player:get_task_param(100,3);
+	-- 		player:SendPacketToSelf(1813,0,encode(obj));
+	-- 		player:alert(19,0,0,"成功击杀一位城主护卫("..player:get_task_param(100,3).."/18)");
+	-- 	end
+	-- 	if player:get_task_param(100,3) == 6 then
+	-- 		player:SendPacketToSelf(1471,0,"{\"id\":1}");
+	-- 		player:autofightstart(61,44,63);
+	-- 		obj = {};
+	-- 		obj.monNum = player:get_task_param(100,3);
+	-- 		player:SendPacketToSelf(1813,0,encode(obj));
+	-- 	end
+	-- 	if player:get_task_param(100,3) == 18 then
+	-- 		player:set_task_state(100,4);
+	-- 		player:push_task_data(1,1);
+	-- 		player:autofightstart(61,33,39);
+	-- 		obj = {};
+	-- 		obj.monNum = 0;
+	-- 		obj.monMax = 1;
+	-- 		obj.action = "击碎：";
+	-- 		obj.progress = player:get_task_state(100);
+	-- 		obj.monName = [[<u><a href=%event:task_track_link_monster,61,32,38%><font color=%#00EC00%>(城主雕像)</font></a></u>]];
+	-- 		player:SendPacketToSelf(1813,0,encode(obj));
+	-- 		local obj = {};
+	-- 		obj[2] = 32;
+	-- 		obj[3] = 38;
+	-- 		obj[4] = 8710;
+	-- 		obj[5] = 35084;
+	-- 		obj[6] = "城主雕像";
+	-- 		obj[7] = 1;
+	-- 		player:mon_gen(encode(obj));
+	-- 		--player:mon_gen(61,32,38,8710,35084,"城主雕像",1,0,0,0,0,0);
+	-- 	end
+	-- end
+end
+
+function mon8707(mon,event,player)
+	-- if player:get_task_state(100) == 5 then
+	-- 	if player:get_task_param(100,5) >= 0 then
+	-- 		player:set_task_param(100,5,player:get_task_param(100,5) + 1);
+	-- 		player:push_task_data(1,1);
+	-- 		local obj = {};
+	-- 		obj.monNum = player:get_task_param(100,5);
+	-- 		player:SendPacketToSelf(1813,0,encode(obj));
+	-- 	end
+	-- 	if player:get_task_param(100,5) == 1 then
+	-- 		player:set_task_state(100,6);
+	-- 		player:push_task_data(1,1);
+	-- 		player:autofightstart(0,0,0);
+	-- 		player:alert(19,0,0,"["..player:GetName().."的魔族军队占领了沙城]");
+	-- 		player:find_road_goto(61,84,108,61001);
+	-- 		local obj = {};
+	-- 		obj.monNum = 1;
+	-- 		obj.monMax = 1;
+	-- 		obj.action = "寻找：";
+	-- 		obj.monName = [[<u><a href=%event:task_track_link_npc,61,83,109,61001%><font color=%#00EC00%>(NPC领取奖励)</font></a></u>]];
+	-- 		player:SendPacketToSelf(1813,0,encode(obj));
+	-- 	end
+	-- end
+end
+
+function mon8710(mon,event,player)
+	-- local nDc = 35;
+	-- local nHp = 35;
+	-- if player:get_task_state(100) == 4 then
+	-- 	player:set_task_state(100,5);
+	-- 	player:push_task_data(1,1);
+	-- 	local obj = {};
+	-- 	obj.monNum = 0;
+	-- 	obj.monMax = 1;
+	-- 	obj.action = "击败：";
+	-- 	obj.progress = player:get_task_state(100);
+	-- 	obj.monName = [[<u><a href=%event:task_track_link_monster,61,32,38%><font color=%#00EC00%>(魂十五.城主)</font></a></u>]];
+	-- 	player:SendPacketToSelf(1813,0,encode(obj));
+	-- end
+end

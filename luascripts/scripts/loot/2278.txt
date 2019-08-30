@@ -1,0 +1,7 @@
+[<"entryid"=2278>
+<Number="5000,10000" random="4000" Bind="1" maxid = "0"  Item="19000,1" >
+<Number="1" random="32000" Bind="0" maxid = "0"  Item="40628,10|40629,5|40630,1" >
+<Number="1" random="360" Bind="1" maxid = "0"  Item="10302,1" >
+<Number="2" random="1800" Bind="1" maxid = "0"  Item="10302,1" >
+<Number="8" random="15000" Bind="1" maxid = "0"  Item="10302,1" >
+]

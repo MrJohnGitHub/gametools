@@ -1,0 +1,5 @@
+require("scripts.Init.player")
+require("scripts.Init.GmOpt")
+require("scripts.Init.RunesSys")
+require("scripts.Activities.activity_include")
+require("scripts.Init.SevenDayTarget")

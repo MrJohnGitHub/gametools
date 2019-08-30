@@ -1,0 +1,7 @@
+require("scripts.Sabac.gongcheng_include")
+require("scripts.lua.json4_include")
+RegisterServerHook(54,"OnSiegeWarStart")
+RegisterServerHook(55,"OnWarStatueBeAttak")
+RegisterServerHook(56,"OnSiegeWarEnd")
+RegisterServerHook(57,"OnSiegeOwnerChange")
+RegisterServerHook(108,"OnSiegeWarHalf")

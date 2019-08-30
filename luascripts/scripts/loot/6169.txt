@@ -1,0 +1,13 @@
+[<"entryid"=6169>
+<Number="1" random="100" Bind="1" maxid = "0"  Item="10040,1" >
+<Number="1" random="100" Bind="1" maxid = "0"  Item="10186,1" >
+<Number="5000,10000" random="100" Bind="1" maxid = "0"  Item="19004,1" >
+<Number="5000,10000" random="100" Bind="1" maxid = "0"  Item="19004,1" >
+<Number="5000,10000" random="100" Bind="1" maxid = "0"  Item="19004,1" >
+<Number="5000,10000" random="100" Bind="1" maxid = "0"  Item="19004,1" >
+<Number="5000,10000" random="100" Bind="1" maxid = "0"  Item="19004,1" >
+<Number="1" random="100" Bind="1" maxid = "0"  Item="20206,1|20406,1|21006,1|21106,1|20706,1|20806,1" >
+<Number="1" random="125" Bind="1" maxid = "0"  Item="20206,1|20406,1|21006,1|21106,1|20706,1|20806,1" >
+
+
+]
