@@ -1,0 +1,157 @@
+{
+	"skins": {
+		"eui.Button": "resource/eui_skins/ButtonSkin.exml"
+	},
+	"autoGenerateExmlsList": true,
+	"styles": {
+		"nstyle1": {
+			"textColor": "0xe4a331",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"nstyle2": {
+			"textColor": "0xd3c3b5",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"nstyle3": {
+			"textColor": "0xe06d10",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"nstyle4": {
+			"textColor": "0xa41a3b",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"nstyle5": {
+			"textColor": "0x827a64",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"nstyle6": {
+			"textColor": "0x7551db",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"nstyle7": {
+			"textColor": "0x167734",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"nstyle8": {
+			"textColor": "0x605e58",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"qstyle1": {
+			"textColor": "0xdbdbd2",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"qstyle2": {
+			"textColor": "0x18c54e",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"qstyle3": {
+			"textColor": "0x1e7ec7",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"qstyle4": {
+			"textColor": "0xbe48ef",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"qstyle5": {
+			"textColor": "0xc31d1d",
+			"fontFamily": "SimHei",
+			"strokeColor": "0",
+			"stroke": 2
+		},
+		"winTitle": {
+			"textColor": "0xfcecc1",
+			"strokeColor": "0x6e3516",
+			"stroke": 2,
+			"size": 26,
+			"width": 150,
+			"textAlign": "center",
+			"fontFamily": "SimHei"
+		},
+		"stroke1": {
+			"strokeColor": "0",
+			"stroke": 2,
+			"fontFamily": "SimHei"
+		},
+		"stroke2": {
+			"strokeColor": "0",
+			"stroke": 2,
+			"fontFamily": "SimHei"
+		},
+		"stroke2Yellow": {
+			"strokeColor": "0",
+			"stroke": 2,
+			"fontFamily": "SimHei",
+			"textColor": "0xDDC035"
+		},
+		"style1": {
+			"textColor": "0xf9e077",
+			"strokeColor": "0x170f0f",
+			"stroke": 2,
+			"fontFamily": "SimHei"
+		},
+		"style2": {
+			"textColor": "0xe4c09b",
+			"strokeColor": "0x170f0f",
+			"stroke": 2,
+			"fontFamily": "SimHei"
+		},
+		"style3": {
+			"textColor": "0xddc035",
+			"strokeColor": "0x170f0f",
+			"stroke": 2,
+			"fontFamily": "SimHei"
+		},
+		"style4": {
+			"textColor": "0xfcecc1",
+			"strokeColor": "0x6e3516",
+			"stroke": 2,
+			"fontFamily": "SimHei"
+		},
+		"style5": {
+			"textColor": "0xfcecc1",
+			"fontFamily": "SimHei"
+		},
+		"btn_style1": {
+			"textColor": "0xfcecc1",
+			"strokeColor": "0",
+			"stroke": 2,
+			"fontFamily": "SimHei"
+		}
+	},
+	"exmls": [
+		"resource/eui_skins/ButtonSkin.exml",
+		"resource/eui_skins/module/login/EnterGameSceneSkin.exml",
+		"resource/eui_skins/module/login/LoginSceneSkin.exml",
+		"resource/eui_skins/module/login/SelectClientSceneSkin.exml",
+		"resource/eui_skins/module/login/SelectSvrWinSkin.exml",
+		"resource/eui_skins/module/selectsvr/ClientItemSkin.exml",
+		"resource/eui_skins/module/selectsvr/SvrInfoItemSkin.exml",
+		"resource/eui_skins/module/selectsvr/SvrPageItemSkin.exml",
+		"resource/eui_skins/ProgressBarSkin.exml"
+	],
+	"path": "resource/default.thm.json"
+}

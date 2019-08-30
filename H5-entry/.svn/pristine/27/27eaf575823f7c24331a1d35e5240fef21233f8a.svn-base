@@ -1,0 +1,335 @@
+/**
+ * Created by John on 2019/5/10.
+ */
+class SelectServerView extends BaseSceneView {
+    public svrNameLabel: eui.Label;
+    public svrStateIcon: eui.Image;
+    public gonggaoBtn: eui.Button;
+    public enterBtn: eui.Button;
+    public selectBtn: eui.Button;
+    public selectSvrGrp: eui.Group;
+    public tipsLabel: eui.Label;
+    public closeBtn: eui.Button;
+    public pageList: eui.List;
+    public serverList: eui.List;
+
+    public gongGaoGrp: eui.Group;
+    public gongGaoLabel: eui.Label;
+
+    public pageSize: number = 10;
+    public suggestData: SuggestSvrData;
+    public selectedServer: ServerData;
+
+    public gonggaoData: { title: string, content: string };
+
+    public constructor() {
+        super();
+        this.skinName = `EnterGameSceneSkin`;
+
+        this.tipsLabel.visible = false;
+
+        this.pageList.itemRenderer = ServerPageItemRender;
+        this.serverList.itemRenderer = ServerItemRender;
+        (<eui.ArrayCollection>this.pageList.dataProvider).source = [];
+        (<eui.ArrayCollection>this.serverList.dataProvider).source = [];
+
+        this.gonggaoBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchGongGao, this);
+        this.selectBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchSelect, this);
+        this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchClose, this);
+        this.enterBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchEnter, this);
+        this.pageList.addEventListener(egret.Event.CHANGE, this.onPageChanged, this);
+        this.serverList.addEventListener(egret.Event.CHANGE, this.onServerChanged, this);
+
+        this.reqMySvrList();
+    }
+
+    onTouchGongGao() {
+        if (this.gongGaoGrp) {
+            this.gongGaoGrp.visible = true;
+        }
+        this.reqGongGao();
+    }
+
+    onSuggestSvrsLoaded() {
+        let svrCount = +this.suggestData.total;
+        let pageCount = Math.floor(svrCount / this.pageSize) + (svrCount % this.pageSize > 0 ? 1 : 0);
+        let pageDatas: ServerPageData[] = [];
+        for (let i = 0; i < pageCount; i++) {
+            let obj = <any>{};
+            obj.page = i + 1;
+            let start = i * this.pageSize + 1;
+            let end = (i + 1) * this.pageSize;
+            obj.name = `${start}-${end}服`;
+            pageDatas.push(obj);
+        }
+        pageDatas.push({isMy: true, name: "最近登录"});
+        pageDatas = pageDatas.reverse();
+        (<eui.ArrayCollection>this.pageList.dataProvider).source = pageDatas;
+        this.setSelectSvr(this.suggestData.mine[0] || this.suggestData.tj[0]);
+    }
+
+    setSelectSvr(data: ServerData) {
+        this.tipsLabel.visible = false;
+        this.selectedServer = data;
+        this.svrStateIcon.source = `svr_state_${data.state}_png`;
+        this.svrNameLabel.text = data.zname;
+    }
+
+    onTouchSelect() {
+        this.selectSvrGrp.visible = true;
+        this.pageList.selectedIndex = 0;
+        this.updateServerPage();
+    }
+
+    updateServerPage(pageData?: ServerData[]) {
+        if (pageData) {
+            (<eui.ArrayCollection>this.serverList.dataProvider).source = pageData;
+            return;
+        }
+        let data: ServerPageData = this.pageList.selectedItem;
+        if (data.isMy) {
+            (<eui.ArrayCollection>this.serverList.dataProvider).source = this.suggestData.mine;
+            return;
+        }
+        (<eui.ArrayCollection>this.serverList.dataProvider).source = [];
+        this.reqSvrListByPage(data.page, this.pageSize);
+    }
+
+    onTouchClose() {
+        this.selectSvrGrp.visible = false;
+    }
+
+    async onTouchEnter() {
+        let platform = window.platform;
+        let selectSvr = this.selectedServer;
+        if(!selectSvr) return;
+        let response = await BackStageReqUtils.sendBackStageReq(BackStageReqUtils.getSingleSvrInfoAddr(), {ptid: platform.platID, zid: selectSvr.zid});
+        if(!response.stat) {
+            return;
+        }
+        let data = <ServerData>response.data;
+        if(data.zid != this.selectedServer.zid) return;
+        selectSvr = this.selectedServer;
+        selectSvr.state = data.state;
+        selectSvr.open_time = data.open_time;
+
+        let svrState = +this.selectedServer.state;
+        if(svrState == ServerState.daikai || BackStageReqUtils.getNowSvrTime() < (+selectSvr.open_time || 0)) {
+            this.tipsLabel.text = "服务器即将开启";
+            this.tipsLabel.visible = true;
+            return;
+        }
+        if(svrState == ServerState.weihu) {
+            this.tipsLabel.text = "服务器维护中";
+            this.tipsLabel.visible = true;
+            return;
+        }
+        this.tipsLabel.visible = false;
+        platform.svrID = selectSvr.zid;
+        BackStageReqUtils.sendUserLogin();
+        let gameClientAddr = BackStageReqUtils.getGameClientAddr();
+        let winHref = `${LocationParam.getProtocol()}${gameClientAddr}game.html`
+            + `?plat_id=${platform.platID}`
+            + `&uid=${platform.userID}`
+            + (platform.userName ? `&username=${platform.userName}` : ``)
+            + (platform.time ? `&time=${platform.time}` : ``)
+            + (platform.channelUID ? `&channelUid=${platform.channelUID}` : ``)
+            + (platform.channelName ? `&channel=${platform.channelName}` : ``)
+            + `&token=${platform.token}`
+            + `&resurl=${gameClientAddr}`
+            + `&sid=${this.selectedServer.zid}`
+            + `&sname=${this.selectedServer.zname}`
+            + `&wsurl=${this.selectedServer.ip}:${this.selectedServer.port}`;
+        window.location.href = winHref;
+    }
+
+    onPageChanged() {
+        this.updateServerPage();
+    }
+
+    onServerChanged() {
+        this.setSelectSvr(this.serverList.selectedItem);
+        this.selectSvrGrp.visible = false;
+    }
+
+    //发送Http请求
+    // sendRequest(url: string, param: any, callback?: (data: any) => void) {
+    //     let req = new egret.HttpRequest();
+    //     req.responseType = egret.HttpResponseType.TEXT;
+    //     let respHandler = (evt: egret.Event) => {
+    //         switch (evt.type) {
+    //             case egret.Event.COMPLETE:
+    //                 if (callback) {
+    //                     let data = JSON.parse(req.response);
+    //                     callback(data);
+    //                 }
+    //                 break;
+    //             case egret.IOErrorEvent.IO_ERROR:
+    //                 console.log("respHandler io error");
+    //                 break;
+    //         }
+    //     };
+    //     req.once(egret.Event.COMPLETE, respHandler, this);
+    //     req.once(egret.IOErrorEvent.IO_ERROR, respHandler, this);
+    //     let sign = this.md5SearchParam(param);
+    //     let searchStr = this.md5SearchParam(param);
+    //     req.open(`${url}?${searchStr}`, egret.HttpMethod.GET);
+    //     req.send();
+    // }
+
+    //请求公告数据
+    async reqGongGao() {
+        if (this.gonggaoData) {
+            this.updateGongGao();
+            return;
+        }
+        let url = BackStageReqUtils.getGongGaoAddr();
+        let param = {
+            ptid: window.platform.platID,
+        }
+        try {
+            let data = await BackStageReqUtils.sendBackStageReq(url, param);
+            if (+data.stat != 0) return;
+            this.gonggaoData = data.data;
+            this.updateGongGao();
+        }
+        catch (e) {
+            // this.reqGongGao();
+        }
+    }
+
+    updateGongGao() {
+        if (this.gongGaoLabel) this.gongGaoLabel.text = this.gonggaoData.content;
+    }
+
+    //请求游戏url配置数据
+    // async reqGameConfig() {
+    //     try {
+    //         await BackStageReqUtils.loadBackStageConfig();
+    //         this.clientConfig = BackStageReqUtils.backStageConfigs;
+    //     }
+    //     catch (e) {
+    //         // this.reqGameConfig();
+    //     }
+    // }
+
+    //获取推荐服，服务器总数，最近登录数据
+    async reqMySvrList() {
+        let url = BackStageReqUtils.getMySvrListAddr();
+        let param = {
+            ptid: window.platform.platID,
+            account: window.platform.account,
+            time: Date.now(),
+            version: 0
+        };
+        try {
+            let response = await BackStageReqUtils.sendBackStageReq(url, param);
+            this.suggestData = response.data;
+            this.onSuggestSvrsLoaded();
+        }
+        catch (e) {
+            // this.reqHistSvrList();
+        }
+    }
+
+    async reqSvrListByPage(page: number, pageCount: number) {
+        let url = BackStageReqUtils.getPageSvrListAddr();
+        let param = {
+            ptid: window.platform.platID,
+            version: 0,
+            page: page,
+            row: pageCount,
+            time: Date.now(),
+        };
+        try {
+            let data = await BackStageReqUtils.sendBackStageReq(url, param);
+            this.updateServerPage(data.zones);
+        }
+        catch (e) {
+            // this.reqSvrByPage(page, pageCount);
+        }
+    }
+}
+
+class ServerPageItemRender extends eui.ItemRenderer {
+    public nameLabel: eui.Label;
+
+    dataChanged() {
+        super.dataChanged();
+        this.nameLabel.text = this.data.name;
+    }
+}
+
+class ServerItemRender extends eui.ItemRenderer {
+    public lastLoginLabel: eui.Label;
+    public nameLabel: eui.Label;
+    public stateIcon: eui.Image;
+    public suggestIcon: eui.Image;
+
+
+    dataChanged() {
+        super.dataChanged();
+        let data: ServerData = this.data;
+        this.stateIcon.source = `svr_state_${data.state}_png`;
+        this.nameLabel.text = data.zname;
+        this.suggestIcon.visible = data.state == `0`;
+    }
+}
+
+/**
+ * |- state | String   | 服务器状态  |
+ * |- zid | String   | 服务器ID  |
+ * |- zname | String   | 服务器名称  |
+ * |- ip | String   | 游戏服务器IP  |
+ * |- port | String   | 游戏服务器端口  |
+ * |- open_time | String   |服务器开服时间  |
+ * |- music | String   |是否屏蔽 1为开启 0为关闭  |
+ * |- voice | String   |是否显示英文 1显示 0不显示  |
+ * |- srole | String   |是否跳过选角页面 1为开启 0为关闭  |
+ * |- cuser | String   |是否可以创建新角色 1为可以 2为不可以 |
+ * |- maintain_starttime | String   |服务器维护开始时间  |
+ * |- maintain_endtime | String   |服务器维护结束时间  |
+ */
+
+type ClientConfig = {
+    apiUrl: string;
+    cdn2: string;
+    cdnUrl: string;
+    cdnnum: string;
+    commurl: string;
+    dataBaseUrl: string;
+    resBaseUrl: string;
+    zcdnnum: string;
+}
+
+type SuggestSvrData = {
+    total: string;
+    tj: ServerData[];
+    mine: ServerData[];
+}
+
+type ServerData = {
+    zid: string;
+    zname: string;
+    ip: string;
+    port: string;
+    state: string;
+    cuser: string;
+    open_time: string;
+}
+
+type ServerPageData = {
+    name: string;
+    page?: number;
+    isMy?: boolean;
+}
+
+enum ServerState {
+    tuijian = 0,
+    zhengchang = 1,
+    huobao = 2,
+    yongji = 3,
+    tongchang = 4,
+    daikai = 5,
+    weihu = 6
+}

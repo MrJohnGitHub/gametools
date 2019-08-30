@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="SvrInfoItemSkin" width="280" height="96" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Image width="280" height="96" source="xinkuang003_png"/>
+	<e:Image x="2" y="1" width="274" height="33" source="chengjiutupian03_png"/>
+	<e:Label id="lastLoginLabel" x="12" y="7" text="上次登陆" size="20" style="nstyle1" visible="false"/>
+	<e:Label id="nameLabel" x="66" y="54" text="双线1090区" size="18" style="nstyle2"/>
+	<e:Image id="stateIcon" x="21" y="46" source="svr_state_0_png"/>
+	<e:Image id="suggestIcon" x="200" y="46" source="tuijianbiaoqian_png"/>
+</e:Skin>

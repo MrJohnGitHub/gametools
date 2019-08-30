@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>热血归来</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="full-screen" content="true" />
+    <meta name="screen-orientation" content="portrait" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta name="360-fullscreen" content="true" />
+    <style>
+        html, body {
+            -ms-touch-action: none;
+            background: #888888;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+<script src="./MD5.js"></script>
+<script>
+    // var gameUrl = `http://10.5.10.19:8200/H5-entry/client.html?plat_id=5001`;
+    var gameUrl = `http://yuewan-1259529662.file.myqcloud.com/rx-entry/client.html?plat_id=5001`;
+    var signKey = `7ed3417b7a5103e5104738a040c2e0a0`;
+    function getYueWanDebugUrl() {
+        let time = Date.now();
+        let gameUrl = this.gameUrl;
+        let key = this.signKey;
+        let gameId = 1703;
+        let encodeGameUrl = encodeURIComponent(gameUrl).toLowerCase();
+        let sign = MD5.hex_md5(`debug_url=${encodeGameUrl}&j_game_id=${gameId}&j_game_secret=${key}&time=${time}`);
+        return `http://japi.game-props.com/h5/entryPage?debug_url=${gameUrl}&j_game_id=${gameId}&time=${time}&sign=${sign}`;
+    }
+    var debugUrl = getYueWanDebugUrl();
+    document.write(`<a href='${debugUrl}'>${debugUrl}</a>`);
+    // window.location.href = debugUrl;
+    console.log(debugUrl);
+</script>
+</body>
+
+</html>

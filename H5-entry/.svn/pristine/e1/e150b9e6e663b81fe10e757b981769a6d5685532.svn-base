@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="SelectClientSceneSkin" width="1136" height="640" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Image width="1136" height="640" x="0" source="denglubg_jpg" y="0"/>
+
+	<e:Group id="selectSvrGrp" x="143" y="33.67">
+		<e:Image x="0" y="7.33" width="852" height="562" source="win1_top_back_png"/>
+		<e:Image x="266" y="0" width="320" height="48" source="tongyongbiaoti_png"/>
+		<e:Image x="349" y="6" source="btxuanzhefuwuqi_png"/>
+		<e:Image x="9" y="50.33" width="837" height="512" source="win_back1_png" anchorOffsetX="0"/>
+		<e:Scroller x="23" y="64.33" anchorOffsetX="0" anchorOffsetY="0" height="481">
+		<e:List id="serverList" itemRendererSkinName="ClientItemSkin">
+			<e:dataProvider>
+			<e:ArrayCollection>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+			</e:ArrayCollection>
+			</e:dataProvider>
+			<e:layout>
+				<e:TileLayout requestedColumnCount="3" horizontalGap="4"/>
+			</e:layout>
+		</e:List>
+		</e:Scroller>
+	</e:Group>
+</e:Skin>

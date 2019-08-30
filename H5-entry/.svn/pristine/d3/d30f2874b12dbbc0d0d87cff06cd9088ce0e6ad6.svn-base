@@ -1,0 +1,35 @@
+{
+	"initial": [
+		"libs/modules/egret/egret.js",
+		"libs/modules/egret/egret.web.js",
+		"libs/modules/eui/eui.js",
+		"libs/modules/assetsmanager/assetsmanager.js",
+		"libs/modules/tween/tween.js",
+		"libs/modules/promise/promise.js"
+	],
+	"game": [
+		"bin-debug/platform/SimplePlatform.js",
+		"bin-debug/scene/BaseScene.js",
+		"bin-debug/scene/BaseSceneView.js",
+		"bin-debug/scene/SceneManager.js",
+		"bin-debug/platform/YueWanPlatform.js",
+		"bin-debug/declear/Window.js",
+		"bin-debug/platform/DebugPlatform.js",
+		"bin-debug/platform/MiKePlatform.js",
+		"bin-debug/platform/Platform.js",
+		"bin-debug/platform/PlatType.js",
+		"bin-debug/App.js",
+		"bin-debug/LoadingUI.js",
+		"bin-debug/Main.js",
+		"bin-debug/adapter/AssetAdapter.js",
+		"bin-debug/scene/PlatLoginScene.js",
+		"bin-debug/scene/PlatLoginView.js",
+		"bin-debug/adapter/ThemeAdapter.js",
+		"bin-debug/scene/SelectServerScene.js",
+		"bin-debug/scene/SelectServerView.js",
+		"bin-debug/utils/BackStageReqUtils.js",
+		"bin-debug/utils/LocationParam.js",
+		"bin-debug/utils/MD5.js",
+		"bin-debug/utils/RequestUtils.js"
+	]
+}

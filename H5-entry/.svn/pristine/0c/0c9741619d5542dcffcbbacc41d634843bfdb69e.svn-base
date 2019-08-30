@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="EnterGameSceneSkin" width="1136" height="640" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+
+	<e:Group horizontalCenter="0" verticalCenter="0">
+		<e:Image width="1136" height="640" x="0" source="denglubg_jpg" y="0"/>
+		<e:Image x="330" y="430" source="denglulxuanzhetiao_png"/>
+		<e:Label id="svrNameLabel" x="442" y="454" text="双线1区" size="20" style="nstyle2"/>
+		<e:Label id="tipsLabel" x="498" y="582" text="服务器暂未开启" size="20" style="nstyle2" textColor="0xe21433"/>
+		<e:Image id="svrStateIcon" x="395" y="445" source="svr_state_0_png"/>
+		<e:Button id="gonggaoBtn" x="27" y="86" icon="gonggaoban_png" visible="false"/>
+		<e:Button id="enterBtn" x="460" y="515" icon="jinruyouxianniu_png"/>
+		<e:Button id="selectBtn" icon="dianjixuanfu_png" x="610" y="450" anchorOffsetY="0"/>
+		<!--<e:Group id="selectSvrGrp" x="143" y="33.67">
+			<e:Image x="0" y="7.33" width="852" height="562" source="win1_top_back_png"/>
+			<e:Image x="266" y="0" width="320" height="48" source="tongyongbiaoti_png"/>
+			<e:Image x="349" y="6" source="btxuanzhefuwuqi_png"/>
+			<e:Button id="closeBtn" x="804" y="8.33" icon="win_close1_png" skinName="skins.ButtonSkin"/>
+			<e:Image x="256" y="50.33" width="590" height="512" source="win_back1_png"/>
+			<e:Image x="4" y="50.33" width="252" height="512" source="win_back1_png"/>
+			<e:Image x="17" y="63.33" width="226" height="486" source="win_back2_png"/>
+			<e:Scroller x="20" y="66.33" width="219" height="440">
+			<e:List id="pageList" itemRendererSkinName="SvrPageItemSkin">
+				<e:dataProvider>
+				<e:ArrayCollection>
+					<e:Object/>
+					<e:Object/>
+					<e:Object/>
+					<e:Object/>
+					<e:Object/>
+					<e:Object/>
+					<e:Object/>
+				</e:ArrayCollection>
+				</e:dataProvider>
+				<e:layout>
+				<e:TileLayout verticalGap="0"/>
+				</e:layout>
+			</e:List>
+			</e:Scroller>
+			<e:Scroller x="269" y="64.33" width="564" height="482">
+			<e:List id="serverList" itemRendererSkinName="SvrInfoItemSkin">
+				<e:dataProvider>
+				<e:ArrayCollection>
+					<e:Object/>
+					<e:Object/>
+					<e:Object/>
+					<e:Object/>
+					<e:Object/>
+					<e:Object/>
+					<e:Object/>
+				</e:ArrayCollection>
+				</e:dataProvider>
+				<e:layout>
+				<e:TileLayout requestedColumnCount="2" horizontalGap="2"/>
+				</e:layout>
+			</e:List>
+			</e:Scroller>
+		</e:Group>-->
+
+	<e:Group id="selectSvrGrp" x="143" y="33.67" visible="false">
+		<e:Image x="0" y="7.33" width="852" height="562" source="win1_top_back_png"/>
+		<e:Image x="219" y="11" width="414" height="37" source="tongyongbiaoti_png" anchorOffsetY="0" anchorOffsetX="0"/>
+		<e:Image x="349" y="10" source="btxuanzhefuwuqi_png"/>
+		<e:Button id="closeBtn" x="804" y="8.33" icon="win_close1_png" skinName="skins.ButtonSkin"/>
+		<e:Image x="12" y="56.33" width="236" height="500" source="win_back1_png" anchorOffsetX="0" alpha="0.8" anchorOffsetY="0"/>
+		<e:Image x="254" y="56.33" width="584" height="500" source="win_back1_png" anchorOffsetX="0" alpha="0.8" anchorOffsetY="0"/>
+		<e:Scroller x="17" y="59.33" width="232" height="492" anchorOffsetX="0" anchorOffsetY="0">
+			<e:List id="pageList" itemRendererSkinName="SvrPageItemSkin">
+			<e:dataProvider>
+				<e:ArrayCollection>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				</e:ArrayCollection>
+			</e:dataProvider>
+			<e:layout>
+				<e:VerticalLayout gap="4"/>
+			</e:layout>
+			</e:List>
+		</e:Scroller>
+		<e:Scroller x="257" y="58.33" width="593" height="494" anchorOffsetX="0" anchorOffsetY="0">
+			<e:List id="serverList" itemRendererSkinName="SvrInfoItemSkin">
+			<e:dataProvider>
+				<e:ArrayCollection>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				</e:ArrayCollection>
+			</e:dataProvider>
+			<e:layout>
+				<e:TileLayout horizontalGap="0" verticalGap="0" requestedColumnCount="2"/>
+			</e:layout>
+			</e:List>
+		</e:Scroller>
+	</e:Group>
+	</e:Group>
+</e:Skin>

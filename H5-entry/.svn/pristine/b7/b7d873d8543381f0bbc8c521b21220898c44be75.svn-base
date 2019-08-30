@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="SvrPageItemSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" states="up,down" >
+	<e:Image width="219" height="62" source="teshuyeqian02_png"/>
+	<e:Image width="219" height="62" source="teshuyeqian01_png" x="0" y="0" visible.down="false"/>
+	<e:Label id="nameLabel" x="66" y="20" text="最近登录" size="22" style="nstyle2"/>
+</e:Skin>

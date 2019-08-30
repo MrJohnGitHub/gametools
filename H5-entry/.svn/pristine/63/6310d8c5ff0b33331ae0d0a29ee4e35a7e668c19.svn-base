@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="SelectSvrWinSkin" width="1136" height="640" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+
+
+	<e:Group x="143" y="33.67">
+		<e:Image x="0" y="7.33" width="852" height="562" source="win1_top_back_png"/>
+		<e:Image x="266" y="0" width="320" height="48" source="tongyongbiaoti_png"/>
+		<e:Image x="349" y="6" source="btxuanzhefuwuqi_png"/>
+		<e:Button x="804" y="8.33" icon="win_close1_png" skinName="skins.ButtonSkin"/>
+		<e:Image x="256" y="50.33" width="590" height="512" source="win_back1_png"/>
+		<e:Image x="4" y="50.33" width="252" height="512" source="win_back1_png"/>
+		<e:Image x="17" y="63.33" width="226" height="486" source="win_back2_png"/>
+		<e:Scroller x="20" y="66.33" width="219" height="440">
+			<e:List itemRendererSkinName="SvrPageItemSkin">
+			<e:dataProvider>
+				<e:ArrayCollection>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				</e:ArrayCollection>
+			</e:dataProvider>
+			<e:layout>
+				<e:VerticalLayout gap="2"/>
+			</e:layout>
+			</e:List>
+		</e:Scroller>
+		<e:Scroller x="269" y="64.33" width="564" height="482">
+			<e:List itemRendererSkinName="SvrInfoItemSkin">
+			<e:dataProvider>
+				<e:ArrayCollection>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				<e:Object/>
+				</e:ArrayCollection>
+			</e:dataProvider>
+			<e:layout>
+				<e:TileLayout horizontalGap="2" verticalGap="2" requestedColumnCount="2"/>
+			</e:layout>
+			</e:List>
+		</e:Scroller>
+	</e:Group>
+</e:Skin>

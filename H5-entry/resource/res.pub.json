@@ -1,0 +1,32 @@
+{
+	"groups": [
+		{
+			"keys": "loadingbgbg_jpg",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/backs/denglubg.jpg",
+			"type": "image",
+			"name": "denglubg_jpg"
+		},
+		{
+			"url": "assets/backs/loadingbgbg.jpg",
+			"type": "image",
+			"name": "loadingbgbg_jpg"
+		},
+		{
+			"url": "texturemerger/ui_sheet_backs.json",
+			"type": "sheet",
+			"name": "ui_sheet_backs_json",
+			"subkeys": "win_close1_png,win1_top_back_png"
+		},
+		{
+			"url": "texturemerger/ui_sheet_xuanfu.json",
+			"type": "sheet",
+			"name": "ui_sheet_xuanfu_json",
+			"subkeys": "btxuanzhefuwuqi_png,denglulxuanzhetiao_png,dianjixuanfu_png,loadingtiao_png,loadingtiaobg_png,jinruyouxianniu_png,tuijianbiaoqian_png,svr_state_2_png,svr_state_3_png,svr_state_6_png,svr_state_0_png,svr_state_1_png,gonggaoban_png,btn1_up_png,chengjiutupian03_png,progress_back1_png,teshuyeqian01_png,teshuyeqian02_png,tongyongbiaoti_png,win_back1_png,win_back2_png,xinkuang003_png,win_close1_png,win1_top_back_png"
+		}
+	]
+}

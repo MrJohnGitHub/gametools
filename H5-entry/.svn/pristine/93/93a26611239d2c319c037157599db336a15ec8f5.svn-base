@@ -1,0 +1,15 @@
+{
+	"options": {
+		"layoutMath": "2",
+		"sizeMode": "free",
+		"useExtension": 1,
+		"layoutGap": 1,
+		"extend": 0
+	},
+	"version": 5,
+	"projectName": "ui_sheet_backs",
+	"files": [
+		"../assets/backs/win_close1.png",
+		"../assets/backs/win1_top_back.png"
+	]
+}

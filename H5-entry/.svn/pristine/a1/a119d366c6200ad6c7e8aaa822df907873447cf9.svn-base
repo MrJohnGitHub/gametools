@@ -1,0 +1,1464 @@
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
+var __extends = this && this.__extends || function __extends(t, e) { 
+ function r() { 
+ this.constructor = t;
+}
+for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
+r.prototype = e.prototype, t.prototype = new r();
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+/**
+ * create by lichujiong on 2018/6/6
+ */
+var BaseScene = (function () {
+    /**
+     * 构造函数
+     */
+    function BaseScene() {
+        this.uiLayer = new eui.UILayer();
+        this.uiLayer.percentHeight = 100;
+        this.uiLayer.percentWidth = 100;
+        this.uiLayer.touchEnabled = false;
+    }
+    /**
+     * 进入Scene调用
+     */
+    BaseScene.prototype.onEnter = function () {
+        var param = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            param[_i] = arguments[_i];
+        }
+        this.getStage().addChild(this.uiLayer);
+    };
+    /**
+     * 退出Scene调用
+     */
+    BaseScene.prototype.onExit = function () {
+        this.getStage().removeChild(this.uiLayer);
+    };
+    BaseScene.prototype.getStage = function () {
+        return egret.lifecycle.stage;
+    };
+    return BaseScene;
+}());
+__reflect(BaseScene.prototype, "BaseScene");
+/**
+ * Created by John on 2019/5/16.
+ */
+var SimplePlatform = (function () {
+    function SimplePlatform() {
+        this.initByLocation();
+        this.initBackStage();
+    }
+    SimplePlatform.prototype.initByLocation = function () {
+        this.platID = LocationParam.getValue("plat_id");
+    };
+    SimplePlatform.prototype.initBackStage = function () {
+        this.backUrlAddr = "home.xh5.mikeyouxi.com";
+        this.backUrlKey = "4c4776e8db27d196ae19ddbb60143488";
+    };
+    //初始化
+    SimplePlatform.prototype.init = function () {
+        return new Promise(function (resolve, reject) {
+            resolve();
+        });
+    };
+    //登录
+    SimplePlatform.prototype.login = function () {
+        return new Promise(function (resolve, reject) {
+            resolve();
+        });
+    };
+    Object.defineProperty(SimplePlatform.prototype, "isDebug", {
+        get: function () {
+            return false;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return SimplePlatform;
+}());
+__reflect(SimplePlatform.prototype, "SimplePlatform", ["Platform"]);
+/**
+ * Created by John on 2019/5/14.
+ */
+var BaseSceneView = (function (_super) {
+    __extends(BaseSceneView, _super);
+    function BaseSceneView() {
+        var _this = _super.call(this) || this;
+        _this.percentWidth = _this.percentHeight = 100;
+        return _this;
+    }
+    return BaseSceneView;
+}(eui.Component));
+__reflect(BaseSceneView.prototype, "BaseSceneView");
+/**
+ * create by lichujiong on 2018/6/6
+ */
+var SceneManager = (function () {
+    /**
+     * 构造函数
+     */
+    function SceneManager() {
+    }
+    /**
+     * 清空处理
+     */
+    SceneManager.prototype.clear = function () {
+        var nowScene = this._currScene;
+        if (nowScene) {
+            nowScene.onExit();
+            this._currScene = null;
+        }
+    };
+    /**
+     * 切换场景
+     * @param clazz 场景类名
+     */
+    SceneManager.prototype.runScene = function (clazz) {
+        var param = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            param[_i - 1] = arguments[_i];
+        }
+        var oldScene = this._currScene;
+        if (oldScene) {
+            if (oldScene instanceof clazz)
+                return;
+            oldScene.onExit();
+        }
+        this._currScene = new clazz();
+        (_a = this._currScene).onEnter.apply(_a, param);
+        var _a;
+    };
+    /**
+     * 获取当前Scene
+     * @returns {number}
+     */
+    SceneManager.prototype.getCurrScene = function () {
+        return this._currScene;
+    };
+    return SceneManager;
+}());
+__reflect(SceneManager.prototype, "SceneManager");
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var ThemeAdapter = (function () {
+    function ThemeAdapter() {
+    }
+    /**
+     * 解析主题
+     * @param url 待解析的主题url
+     * @param onSuccess 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+     * @param onError 解析失败回调函数，示例：errorFunc():void;
+     * @param thisObject 回调的this引用
+     */
+    ThemeAdapter.prototype.getTheme = function (url, onSuccess, onError, thisObject) {
+        var _this = this;
+        function onResGet(e) {
+            onSuccess.call(thisObject, e);
+        }
+        function onResError(e) {
+            if (e.resItem.url == url) {
+                RES.removeEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, onResError, null);
+                onError.call(thisObject);
+            }
+        }
+        if (typeof generateEUI !== 'undefined') {
+            egret.callLater(function () {
+                onSuccess.call(thisObject, generateEUI);
+            }, this);
+        }
+        else if (typeof generateEUI2 !== 'undefined') {
+            RES.getResByUrl("resource/gameEui.json", function (data, url) {
+                window["JSONParseClass"]["setData"](data);
+                egret.callLater(function () {
+                    onSuccess.call(thisObject, generateEUI2);
+                }, _this);
+            }, this, RES.ResourceItem.TYPE_JSON);
+        }
+        else if (typeof generateJSON !== 'undefined') {
+            if (url.indexOf(".exml") > -1) {
+                var dataPath = url.split("/");
+                dataPath.pop();
+                var dirPath = dataPath.join("/") + "_EUI.json";
+                if (!generateJSON.paths[url]) {
+                    RES.getResByUrl(dirPath, function (data) {
+                        window["JSONParseClass"]["setData"](data);
+                        egret.callLater(function () {
+                            onSuccess.call(thisObject, generateJSON.paths[url]);
+                        }, _this);
+                    }, this, RES.ResourceItem.TYPE_JSON);
+                }
+                else {
+                    egret.callLater(function () {
+                        onSuccess.call(thisObject, generateJSON.paths[url]);
+                    }, this);
+                }
+            }
+            else {
+                egret.callLater(function () {
+                    onSuccess.call(thisObject, generateJSON);
+                }, this);
+            }
+        }
+        else {
+            RES.addEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, onResError, null);
+            RES.getResByUrl(url, onResGet, this, RES.ResourceItem.TYPE_TEXT);
+        }
+    };
+    return ThemeAdapter;
+}());
+__reflect(ThemeAdapter.prototype, "ThemeAdapter", ["eui.IThemeAdapter"]);
+// window.hasSDK = () => {
+//     if(window.SDKjh) return true;
+//     return false;
+// }
+/**
+ * Created by John on 2019/5/16.
+ * 内网平台5000
+ */
+var DebugPlatform = (function (_super) {
+    __extends(DebugPlatform, _super);
+    function DebugPlatform() {
+        return _super.call(this) || this;
+    }
+    DebugPlatform.prototype.initByLocation = function () {
+        this.platID = PlatType.Debug;
+    };
+    DebugPlatform.prototype.initBackStage = function () {
+        this.backUrlAddr = "10.5.70.4:8090";
+    };
+    Object.defineProperty(DebugPlatform.prototype, "isDebug", {
+        get: function () {
+            return true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return DebugPlatform;
+}(SimplePlatform));
+__reflect(DebugPlatform.prototype, "DebugPlatform");
+/**
+ * Created by John on 2019/5/13.
+ */
+var MiKePlatform = (function (_super) {
+    __extends(MiKePlatform, _super);
+    function MiKePlatform() {
+        return _super.call(this) || this;
+    }
+    Object.defineProperty(MiKePlatform.prototype, "account", {
+        get: function () {
+            return this.channelName + "-" + this.userID;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    MiKePlatform.prototype.init = function () {
+        return new Promise(function (resolve, reject) {
+            window.SDKjh.showInit(function (data) {
+                if (+data.status == 0) {
+                    resolve();
+                }
+                else {
+                    reject("聚合SDK初始化失败");
+                }
+            });
+        });
+    };
+    MiKePlatform.prototype.login = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            window.SDKjh.showLoginView(function (data) {
+                if (+data.status == 0) {
+                    _this.userID = data.userId;
+                    _this.token = data.accessToken;
+                    _this.channelName = data.channelName;
+                    _this.channelUID = data.channelUid;
+                    resolve();
+                }
+                else {
+                    reject("聚合SDK登录失败");
+                }
+            });
+        });
+    };
+    MiKePlatform.prototype.getChannelID = function () {
+        return this.channelName + "_" + this.channelUID;
+    };
+    return MiKePlatform;
+}(SimplePlatform));
+__reflect(MiKePlatform.prototype, "MiKePlatform");
+/**
+ * Created by John on 2019/5/13.
+ */
+var PlatType = (function () {
+    function PlatType() {
+    }
+    PlatType.Debug = 5000;
+    PlatType.MiKe = 1;
+    return PlatType;
+}());
+__reflect(PlatType.prototype, "PlatType");
+/**
+ * Created by John on 2019/5/10.
+ */
+var App = (function () {
+    function App() {
+    }
+    App.SceneManager = new SceneManager();
+    return App;
+}());
+__reflect(App.prototype, "App");
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var LoadingUI = (function (_super) {
+    __extends(LoadingUI, _super);
+    function LoadingUI() {
+        var _this = _super.call(this) || this;
+        _this.createView();
+        return _this;
+    }
+    LoadingUI.prototype.createView = function () {
+        this.textField = new egret.TextField();
+        this.addChild(this.textField);
+        this.textField.y = 300;
+        this.textField.width = 480;
+        this.textField.height = 100;
+        this.textField.textAlign = "center";
+    };
+    LoadingUI.prototype.onProgress = function (current, total) {
+        this.textField.text = "Loading..." + current + "/" + total;
+    };
+    return LoadingUI;
+}(egret.Sprite));
+__reflect(LoadingUI.prototype, "LoadingUI", ["RES.PromiseTaskReporter"]);
+var Main = (function (_super) {
+    __extends(Main, _super);
+    function Main() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Main.prototype.createChildren = function () {
+        _super.prototype.createChildren.call(this);
+        egret.lifecycle.addLifecycleListener(function (context) {
+            // custom lifecycle plugin
+        });
+        egret.lifecycle.onPause = function () {
+            // egret.ticker.pause();
+        };
+        egret.lifecycle.onResume = function () {
+            // egret.ticker.resume();
+        };
+        //inject the custom material parser
+        //注入自定义的素材解析器
+        var assetAdapter = new AssetAdapter();
+        egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
+        egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
+        egret.ImageLoader.crossOrigin = "anonymous";
+        LocationParam.parseLocation();
+        this.initPlatform();
+        this.loginPlat();
+        this.runGame().catch(function (e) {
+            console.log(e);
+        });
+    };
+    Main.prototype.initPlatform = function () {
+        var platID = LocationParam.getValue("plat_id") || PlatType.Debug;
+        switch (+platID) {
+            case PlatType.MiKe:
+                window.platform = new MiKePlatform();
+                break;
+            case PlatType.Debug:
+                window.platform = new DebugPlatform();
+                break;
+        }
+    };
+    Main.prototype.loginPlat = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!window.platform.platID) return [3 /*break*/, 4];
+                        return [4 /*yield*/, BackStageReqUtils.loadBackStageConfig()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, window.platform.init()];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, window.platform.login()];
+                    case 3:
+                        _a.sent();
+                        this.showSelectServerScene();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Main.prototype.runGame = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.loadResource()];
+                    case 1:
+                        _a.sent();
+                        this.loadResComplete = true;
+                        this.showSelectServerScene();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Main.prototype.loadResource = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 4, , 5]);
+                        return [4 /*yield*/, RES.loadConfig("resource/default.res.json", "resource/")];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.loadTheme()];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, RES.loadGroup("preload")];
+                    case 3:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
+                        e_1 = _a.sent();
+                        console.error(e_1);
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Main.prototype.loadTheme = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            // load skin theme configuration file, you can manually modify the file. And replace the default skin.
+            //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
+            var theme = new eui.Theme("resource/default.thm.json", _this.stage);
+            theme.addEventListener(eui.UIEvent.COMPLETE, function () {
+                resolve();
+            }, _this);
+        });
+    };
+    Main.prototype.showSelectServerScene = function () {
+        if (!this.loadResComplete)
+            return;
+        if (window.platform.isDebug) {
+            App.SceneManager.runScene(PlatLoginScene);
+            return;
+        }
+        if (!window.platform.userID)
+            return;
+        App.SceneManager.runScene(SelectServerScene);
+    };
+    return Main;
+}(eui.UILayer));
+__reflect(Main.prototype, "Main");
+/**
+ * Created by John on 2019/5/10.
+ */
+var PlatLoginScene = (function (_super) {
+    __extends(PlatLoginScene, _super);
+    function PlatLoginScene() {
+        var _this = _super.call(this) || this;
+        _this.loginView = new PlatLoginView();
+        _this.uiLayer.addChild(_this.loginView);
+        return _this;
+    }
+    PlatLoginScene.prototype.onEnter = function () {
+        _super.prototype.onEnter.call(this);
+    };
+    return PlatLoginScene;
+}(BaseScene));
+__reflect(PlatLoginScene.prototype, "PlatLoginScene");
+/**
+ * Created by John on 2019/5/10.
+ */
+var PlatLoginView = (function (_super) {
+    __extends(PlatLoginView, _super);
+    function PlatLoginView() {
+        var _this = _super.call(this) || this;
+        _this.skinName = "LoginSceneSkin";
+        return _this;
+    }
+    PlatLoginView.prototype.$onAddToStage = function (stage, nestLv) {
+        _super.prototype.$onAddToStage.call(this, stage, nestLv);
+        this.loginBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchLogin, this);
+        this.accountInput.text = egret.localStorage.getItem("debug_uid");
+        this.accountInput.text = egret.localStorage.getItem("debug_token");
+    };
+    PlatLoginView.prototype.onTouchLogin = function () {
+        if (!this.accountInput.text)
+            return;
+        window.platform.platID = 5000;
+        window.platform.userID = this.accountInput.text;
+        window.platform.token = this.pwdInput.text;
+        egret.localStorage.setItem("debug_uid", window.platform.userID);
+        egret.localStorage.setItem("debug_token", window.platform.token);
+        App.SceneManager.runScene(SelectServerScene);
+    };
+    return PlatLoginView;
+}(BaseSceneView));
+__reflect(PlatLoginView.prototype, "PlatLoginView");
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var AssetAdapter = (function () {
+    function AssetAdapter() {
+    }
+    /**
+     * @language zh_CN
+     * 解析素材
+     * @param source 待解析的新素材标识符
+     * @param compFunc 解析完成回调函数，示例：callBack(content:any,source:string):void;
+     * @param thisObject callBack的 this 引用
+     */
+    AssetAdapter.prototype.getAsset = function (source, compFunc, thisObject) {
+        function onGetRes(data) {
+            compFunc.call(thisObject, data, source);
+        }
+        if (RES.hasRes(source)) {
+            var data = RES.getRes(source);
+            if (data) {
+                onGetRes(data);
+            }
+            else {
+                RES.getResAsync(source, onGetRes, this);
+            }
+        }
+        else {
+            RES.getResByUrl(source, onGetRes, this, RES.ResourceItem.TYPE_IMAGE);
+        }
+    };
+    return AssetAdapter;
+}());
+__reflect(AssetAdapter.prototype, "AssetAdapter", ["eui.IAssetAdapter"]);
+/**
+ * Created by John on 2019/5/10.
+ */
+var SelectServerScene = (function (_super) {
+    __extends(SelectServerScene, _super);
+    function SelectServerScene() {
+        var _this = _super.call(this) || this;
+        _this.selectServerView = new SelectServerView();
+        _this.uiLayer.addChild(_this.selectServerView);
+        return _this;
+    }
+    return SelectServerScene;
+}(BaseScene));
+__reflect(SelectServerScene.prototype, "SelectServerScene");
+/**
+ * Created by John on 2019/5/10.
+ */
+var SelectServerView = (function (_super) {
+    __extends(SelectServerView, _super);
+    function SelectServerView() {
+        var _this = _super.call(this) || this;
+        _this.pageSize = 10;
+        _this.skinName = "EnterGameSceneSkin";
+        _this.pageList.itemRenderer = ServerPageItemRender;
+        _this.serverList.itemRenderer = ServerItemRender;
+        _this.pageList.dataProvider.source = [];
+        _this.serverList.dataProvider.source = [];
+        _this.gonggaoBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, _this.onTouchGongGao, _this);
+        _this.selectBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, _this.onTouchSelect, _this);
+        _this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, _this.onTouchClose, _this);
+        _this.enterBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, _this.onTouchEnter, _this);
+        _this.pageList.addEventListener(egret.Event.CHANGE, _this.onPageChanged, _this);
+        _this.serverList.addEventListener(egret.Event.CHANGE, _this.onServerChanged, _this);
+        _this.reqMySvrList();
+        return _this;
+    }
+    SelectServerView.prototype.onTouchGongGao = function () {
+        if (this.gongGaoGrp) {
+            this.gongGaoGrp.visible = true;
+        }
+        this.reqGongGao();
+    };
+    SelectServerView.prototype.onSuggestSvrsLoaded = function () {
+        var svrCount = +this.suggestData.total;
+        var pageCount = Math.floor(svrCount / this.pageSize) + (svrCount % this.pageSize > 0 ? 1 : 0);
+        var pageDatas = [];
+        for (var i = 0; i < pageCount; i++) {
+            var obj = {};
+            obj.page = i + 1;
+            var start = i * this.pageSize + 1;
+            var end = (i + 1) * this.pageSize;
+            obj.name = start + "-" + end + "\u670D";
+            pageDatas.push(obj);
+        }
+        pageDatas.push({ isMy: true, name: "最近登录" });
+        pageDatas = pageDatas.reverse();
+        this.pageList.dataProvider.source = pageDatas;
+        this.setSelectSvr(this.suggestData.mine[0] || this.suggestData.tj[0]);
+    };
+    SelectServerView.prototype.setSelectSvr = function (data) {
+        this.selectedServer = data;
+        this.svrStateIcon.source = "svr_state_" + data.state + "_png";
+        this.svrNameLabel.text = data.zname;
+    };
+    SelectServerView.prototype.onTouchSelect = function () {
+        this.selectSvrGrp.visible = true;
+        this.pageList.selectedIndex = 0;
+        this.updateServerPage();
+    };
+    SelectServerView.prototype.updateServerPage = function (pageData) {
+        if (pageData) {
+            this.serverList.dataProvider.source = pageData;
+            return;
+        }
+        var data = this.pageList.selectedItem;
+        if (data.isMy) {
+            this.serverList.dataProvider.source = this.suggestData.mine;
+            return;
+        }
+        this.serverList.dataProvider.source = [];
+        this.reqSvrListByPage(data.page, this.pageSize);
+    };
+    SelectServerView.prototype.onTouchClose = function () {
+        this.selectSvrGrp.visible = false;
+    };
+    SelectServerView.prototype.onTouchEnter = function () {
+        var platform = window.platform;
+        var gameClientAddr = BackStageReqUtils.getGameClientAddr();
+        window.location.href = "" + LocationParam.getProtocol() + gameClientAddr + "client.html"
+            + ("?plat_id=" + platform.platID + "&uid=" + platform.userID + "&channelUid=" + platform.channelUID)
+            + ("&channel=" + platform.channelName + "&token=" + platform.token)
+            + ("&resurl=" + gameClientAddr + "&sid=" + this.selectedServer.zid)
+            + ("&wsurl=" + this.selectedServer.ip + ":" + this.selectedServer.port);
+    };
+    SelectServerView.prototype.onPageChanged = function () {
+        this.updateServerPage();
+    };
+    SelectServerView.prototype.onServerChanged = function () {
+        this.setSelectSvr(this.serverList.selectedItem);
+        this.selectSvrGrp.visible = false;
+    };
+    //发送Http请求
+    // sendRequest(url: string, param: any, callback?: (data: any) => void) {
+    //     let req = new egret.HttpRequest();
+    //     req.responseType = egret.HttpResponseType.TEXT;
+    //     let respHandler = (evt: egret.Event) => {
+    //         switch (evt.type) {
+    //             case egret.Event.COMPLETE:
+    //                 if (callback) {
+    //                     let data = JSON.parse(req.response);
+    //                     callback(data);
+    //                 }
+    //                 break;
+    //             case egret.IOErrorEvent.IO_ERROR:
+    //                 console.log("respHandler io error");
+    //                 break;
+    //         }
+    //     };
+    //     req.once(egret.Event.COMPLETE, respHandler, this);
+    //     req.once(egret.IOErrorEvent.IO_ERROR, respHandler, this);
+    //     let sign = this.md5SearchParam(param);
+    //     let searchStr = this.md5SearchParam(param);
+    //     req.open(`${url}?${searchStr}`, egret.HttpMethod.GET);
+    //     req.send();
+    // }
+    //请求公告数据
+    SelectServerView.prototype.reqGongGao = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var url, param, data, e_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (this.gonggaoData) {
+                            this.updateGongGao();
+                            return [2 /*return*/];
+                        }
+                        url = BackStageReqUtils.getGongGaoAddr();
+                        param = {
+                            ptid: window.platform.platID,
+                        };
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, BackStageReqUtils.sendBackStageReq(url, param)];
+                    case 2:
+                        data = _a.sent();
+                        if (+data.stat != 0)
+                            return [2 /*return*/];
+                        this.gonggaoData = data.data;
+                        this.updateGongGao();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_2 = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SelectServerView.prototype.updateGongGao = function () {
+        if (this.gongGaoLabel)
+            this.gongGaoLabel.text = this.gonggaoData.content;
+    };
+    //请求游戏url配置数据
+    // async reqGameConfig() {
+    //     try {
+    //         await BackStageReqUtils.loadBackStageConfig();
+    //         this.clientConfig = BackStageReqUtils.backStageConfigs;
+    //     }
+    //     catch (e) {
+    //         // this.reqGameConfig();
+    //     }
+    // }
+    //获取推荐服，服务器总数，最近登录数据
+    SelectServerView.prototype.reqMySvrList = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var url, param, response, e_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        url = BackStageReqUtils.getMySvrListAddr();
+                        param = {
+                            ptid: window.platform.platID,
+                            account: window.platform.account,
+                            time: Date.now(),
+                            version: 0
+                        };
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, BackStageReqUtils.sendBackStageReq(url, param)];
+                    case 2:
+                        response = _a.sent();
+                        this.suggestData = response.data;
+                        this.onSuggestSvrsLoaded();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_3 = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SelectServerView.prototype.reqSvrListByPage = function (page, pageCount) {
+        return __awaiter(this, void 0, void 0, function () {
+            var url, param, data, e_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        url = BackStageReqUtils.getPageSvrListAddr();
+                        param = {
+                            ptid: window.platform.platID,
+                            version: 0,
+                            page: page,
+                            row: pageCount,
+                            time: Date.now(),
+                        };
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, BackStageReqUtils.sendBackStageReq(url, param)];
+                    case 2:
+                        data = _a.sent();
+                        this.updateServerPage(data.zones);
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_4 = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return SelectServerView;
+}(BaseSceneView));
+__reflect(SelectServerView.prototype, "SelectServerView");
+var ServerPageItemRender = (function (_super) {
+    __extends(ServerPageItemRender, _super);
+    function ServerPageItemRender() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ServerPageItemRender.prototype.dataChanged = function () {
+        _super.prototype.dataChanged.call(this);
+        this.nameLabel.text = this.data.name;
+    };
+    return ServerPageItemRender;
+}(eui.ItemRenderer));
+__reflect(ServerPageItemRender.prototype, "ServerPageItemRender");
+var ServerItemRender = (function (_super) {
+    __extends(ServerItemRender, _super);
+    function ServerItemRender() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ServerItemRender.prototype.dataChanged = function () {
+        _super.prototype.dataChanged.call(this);
+        var data = this.data;
+        this.stateIcon.source = "svr_state_" + data.state + "_png";
+        this.nameLabel.text = data.zname;
+        this.suggestIcon.visible = data.state == "0";
+    };
+    return ServerItemRender;
+}(eui.ItemRenderer));
+__reflect(ServerItemRender.prototype, "ServerItemRender");
+/**
+ * Created by John on 2019/5/16.
+ */
+var BackStageReqUtils = (function () {
+    function BackStageReqUtils() {
+    }
+    //加载后台配置数据
+    BackStageReqUtils.loadBackStageConfig = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var param, response, e_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        param = {
+                            ptid: window.platform.platID,
+                            time: Date.now(),
+                            version: 0
+                        };
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.sendBackStageReq(window.platform.backUrlAddr + "/Server/gameconfig", param)];
+                    case 2:
+                        response = _a.sent();
+                        this.backStageConfigs = response.data;
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_5 = _a.sent();
+                        console.error(e_5);
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //后台请求参数转换
+    BackStageReqUtils.md5BackStageReqParam = function (param) {
+        var keys = Object.keys(param);
+        keys.sort();
+        var str = "";
+        var md5Str = "";
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            if (i > 0)
+                str += "&";
+            var value = param[key];
+            str += key + "=" + value;
+        }
+        md5Str = str + "&key=" + window.platform.backUrlKey;
+        var sign = MD5.hex_md5(md5Str);
+        str += "&sign=" + sign;
+        return str;
+    };
+    //发起后台请求
+    BackStageReqUtils.sendBackStageReq = function (url, param) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var req = new egret.HttpRequest();
+            req.responseType = egret.HttpResponseType.TEXT;
+            var respHandler = function (evt) {
+                switch (evt.type) {
+                    case egret.Event.COMPLETE:
+                        var data = JSON.parse(req.response);
+                        resolve(data);
+                        break;
+                    case egret.IOErrorEvent.IO_ERROR:
+                        console.log("\u8BF7\u6C42\u5931\u8D25\uFF1A" + url);
+                        reject(data);
+                        break;
+                }
+            };
+            req.once(egret.Event.COMPLETE, respHandler, _this);
+            req.once(egret.IOErrorEvent.IO_ERROR, respHandler, _this);
+            if (param) {
+                var searchStr = _this.md5BackStageReqParam(param);
+                url += "?" + searchStr;
+            }
+            req.open("" + LocationParam.getProtocol() + url, egret.HttpMethod.GET);
+            req.send();
+        });
+    };
+    /**
+     * 获取游戏客户端入口地址
+     */
+    BackStageReqUtils.getGameClientAddr = function () {
+        return "" + this.backStageConfigs[0].resBaseUrl;
+    };
+    /**
+     * 获取后台公告地址
+     */
+    BackStageReqUtils.getGongGaoAddr = function () {
+        return this.backStageConfigs[0].apiUrl + "/server/gonggao";
+    };
+    /**
+     * 获取最近登录信息
+     */
+    BackStageReqUtils.getMySvrListAddr = function () {
+        return this.backStageConfigs[0].apiUrl + "/Newserver/selectzone";
+    };
+    /**
+     * 获取一页服务器信息
+     */
+    BackStageReqUtils.getPageSvrListAddr = function () {
+        return this.backStageConfigs[0].apiUrl + "/Newserver/list";
+    };
+    /**
+     * 获取单个服务器的信息
+     */
+    BackStageReqUtils.getSingleSvrInfoAddr = function () {
+        return this.backStageConfigs[0].apiUrl + "/Newserver/info";
+    };
+    /**
+     * 用户登录数据收集接口
+     */
+    BackStageReqUtils.getLoginRecordAddr = function () {
+        return this.backStageConfigs[0].apiUrl + "/Login/userlogin";
+    };
+    return BackStageReqUtils;
+}());
+__reflect(BackStageReqUtils.prototype, "BackStageReqUtils");
+/**
+ * Created by John on 2019/5/10.
+ */
+var LocationParam = (function () {
+    function LocationParam() {
+    }
+    LocationParam.parseLocation = function () {
+        var href = window.location.href;
+        var index = href.indexOf("?");
+        var search = href.substr(index + 1); //取得所有参数   stringvar.substr(start [, length ]
+        var param = {};
+        var arr = search.split("&"); //各个参数放到数组里
+        for (var i = 0; i < arr.length; i++) {
+            var eqIndex = arr[i].indexOf("=");
+            if (eqIndex > 0) {
+                var key = arr[i].substring(0, eqIndex);
+                var value = arr[i].substr(eqIndex + 1);
+                param[key] = value;
+            }
+        }
+        this.param = param;
+        this._isHttps = window.location.protocol.indexOf("https:") >= 0;
+    };
+    LocationParam.isHttps = function () {
+        return this._isHttps;
+    };
+    /**
+     * 获取指定参数值
+     * @param key
+     */
+    LocationParam.getValue = function (key) {
+        return this.param[key];
+    };
+    LocationParam.getProtocol = function () {
+        return window.location.protocol + "//";
+    };
+    return LocationParam;
+}());
+__reflect(LocationParam.prototype, "LocationParam");
+/*
+ * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
+ * Digest Algorithm, as defined in RFC 1321.
+ * Version 2.2 Copyright (C) Paul Johnston 1999 - 2009
+ * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
+ * Distributed under the BSD License
+ * See http://pajhome.org.uk/crypt/md5 for more info.
+ */
+/*
+ * Configurable letiables. You may need to tweak these to be compatible with
+ * the server-side, but the defaults work in most cases.
+ */
+var MD5 = (function () {
+    function MD5() {
+    }
+    /* base-64 pad character. "=" for strict RFC compliance   */
+    /*
+     * These are the privates you'll usually want to call
+     * They take string arguments and return either hex or base-64 encoded strings
+     */
+    MD5.hex_md5 = function (s) {
+        return this.rstr2hex(this.rstr_md5(this.str2rstr_utf8(s)));
+    };
+    MD5.b64_md5 = function (s) {
+        return this.rstr2b64(this.rstr_md5(this.str2rstr_utf8(s)));
+    };
+    MD5.any_md5 = function (s, e) {
+        return this.rstr2any(this.rstr_md5(this.str2rstr_utf8(s)), e);
+    };
+    MD5.hex_hmac_md5 = function (k, d) {
+        return this.rstr2hex(this.rstr_hmac_md5(this.str2rstr_utf8(k), this.str2rstr_utf8(d)));
+    };
+    MD5.b64_hmac_md5 = function (k, d) {
+        return this.rstr2b64(this.rstr_hmac_md5(this.str2rstr_utf8(k), this.str2rstr_utf8(d)));
+    };
+    MD5.any_hmac_md5 = function (k, d, e) {
+        return this.rstr2any(this.rstr_hmac_md5(this.str2rstr_utf8(k), this.str2rstr_utf8(d)), e);
+    };
+    /*
+     * Perform a simple self-test to see if the VM is working
+     */
+    MD5.md5_vm_test = function () {
+        return this.hex_md5("abc").toLowerCase() == "900150983cd24fb0d6963f7d28e17f72";
+    };
+    /*
+     * Calculate the MD5 of a raw string
+     */
+    MD5.rstr_md5 = function (s) {
+        return this.binl2rstr(this.binl_md5(this.rstr2binl(s), s.length * 8));
+    };
+    /*
+     * Calculate the HMAC-MD5, of a key and some data (raw strings)
+     */
+    MD5.rstr_hmac_md5 = function (key, data) {
+        var bkey = this.rstr2binl(key);
+        if (bkey.length > 16)
+            bkey = this.binl_md5(bkey, key.length * 8);
+        var ipad = Array(16), opad = Array(16);
+        for (var i = 0; i < 16; i++) {
+            ipad[i] = bkey[i] ^ 0x36363636;
+            opad[i] = bkey[i] ^ 0x5C5C5C5C;
+        }
+        var hash = this.binl_md5(ipad.concat(this.rstr2binl(data)), 512 + data.length * 8);
+        return this.binl2rstr(this.binl_md5(opad.concat(hash), 512 + 128));
+    };
+    /*
+     * Convert a raw string to a hex string
+     */
+    MD5.rstr2hex = function (input) {
+        try {
+            this.hexcase;
+        }
+        catch (e) {
+            this.hexcase = 0;
+        }
+        var hex_tab = this.hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+        var output = "";
+        var x;
+        for (var i = 0; i < input.length; i++) {
+            x = input.charCodeAt(i);
+            output += hex_tab.charAt((x >>> 4) & 0x0F)
+                + hex_tab.charAt(x & 0x0F);
+        }
+        return output;
+    };
+    /*
+     * Convert a raw string to a base-64 string
+     */
+    MD5.rstr2b64 = function (input) {
+        try {
+            this.b64pad;
+        }
+        catch (e) {
+            this.b64pad = '';
+        }
+        var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        var output = "";
+        var len = input.length;
+        for (var i = 0; i < len; i += 3) {
+            var triplet = (input.charCodeAt(i) << 16)
+                | (i + 1 < len ? input.charCodeAt(i + 1) << 8 : 0)
+                | (i + 2 < len ? input.charCodeAt(i + 2) : 0);
+            for (var j = 0; j < 4; j++) {
+                if (i * 8 + j * 6 > input.length * 8)
+                    output += this.b64pad;
+                else
+                    output += tab.charAt((triplet >>> 6 * (3 - j)) & 0x3F);
+            }
+        }
+        return output;
+    };
+    /*
+     * Convert a raw string to an arbitrary string encoding
+     */
+    MD5.rstr2any = function (input, encoding) {
+        var divisor = encoding.length;
+        var i, j, q, x, quotient;
+        /* Convert to an array of 16-bit big-endian values, forming the dividend */
+        var dividend = Array(Math.ceil(input.length / 2));
+        for (i = 0; i < dividend.length; i++) {
+            dividend[i] = (input.charCodeAt(i * 2) << 8) | input.charCodeAt(i * 2 + 1);
+        }
+        /*
+         * Repeatedly perform a long division. The binary array forms the dividend,
+         * the length of the encoding is the divisor. Once computed, the quotient
+         * forms the dividend for the next step. All remainders are stored for later
+         * use.
+         */
+        var full_length = Math.ceil(input.length * 8 /
+            (Math.log(encoding.length) / Math.log(2)));
+        var remainders = Array(full_length);
+        for (j = 0; j < full_length; j++) {
+            quotient = Array();
+            x = 0;
+            for (i = 0; i < dividend.length; i++) {
+                x = (x << 16) + dividend[i];
+                q = Math.floor(x / divisor);
+                x -= q * divisor;
+                if (quotient.length > 0 || q > 0)
+                    quotient[quotient.length] = q;
+            }
+            remainders[j] = x;
+            dividend = quotient;
+        }
+        /* Convert the remainders to the output string */
+        var output = "";
+        for (i = remainders.length - 1; i >= 0; i--)
+            output += encoding.charAt(remainders[i]);
+        return output;
+    };
+    /*
+     * Encode a string as utf-8.
+     * For efficiency, this assumes the input is valid utf-16.
+     */
+    MD5.str2rstr_utf8 = function (input) {
+        var output = "";
+        var i = -1;
+        var x, y;
+        while (++i < input.length) {
+            /* Decode utf-16 surrogate pairs */
+            x = input.charCodeAt(i);
+            y = i + 1 < input.length ? input.charCodeAt(i + 1) : 0;
+            if (0xD800 <= x && x <= 0xDBFF && 0xDC00 <= y && y <= 0xDFFF) {
+                x = 0x10000 + ((x & 0x03FF) << 10) + (y & 0x03FF);
+                i++;
+            }
+            /* Encode output as utf-8 */
+            if (x <= 0x7F)
+                output += String.fromCharCode(x);
+            else if (x <= 0x7FF)
+                output += String.fromCharCode(0xC0 | ((x >>> 6) & 0x1F), 0x80 | (x & 0x3F));
+            else if (x <= 0xFFFF)
+                output += String.fromCharCode(0xE0 | ((x >>> 12) & 0x0F), 0x80 | ((x >>> 6) & 0x3F), 0x80 | (x & 0x3F));
+            else if (x <= 0x1FFFFF)
+                output += String.fromCharCode(0xF0 | ((x >>> 18) & 0x07), 0x80 | ((x >>> 12) & 0x3F), 0x80 | ((x >>> 6) & 0x3F), 0x80 | (x & 0x3F));
+        }
+        return output;
+    };
+    /*
+     * Encode a string as utf-16
+     */
+    MD5.str2rstr_utf16le = function (input) {
+        var output = "";
+        for (var i = 0; i < input.length; i++)
+            output += String.fromCharCode(input.charCodeAt(i) & 0xFF, (input.charCodeAt(i) >>> 8) & 0xFF);
+        return output;
+    };
+    MD5.str2rstr_utf16be = function (input) {
+        var output = "";
+        for (var i = 0; i < input.length; i++)
+            output += String.fromCharCode((input.charCodeAt(i) >>> 8) & 0xFF, input.charCodeAt(i) & 0xFF);
+        return output;
+    };
+    /*
+     * Convert a raw string to an array of little-endian words
+     * Characters >255 have their high-byte silently ignored.
+     */
+    MD5.rstr2binl = function (input) {
+        var output = Array(input.length >> 2);
+        for (var i = 0; i < output.length; i++)
+            output[i] = 0;
+        for (var i = 0; i < input.length * 8; i += 8)
+            output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (i % 32);
+        return output;
+    };
+    /*
+     * Convert an array of little-endian words to a string
+     */
+    MD5.binl2rstr = function (input) {
+        var output = "";
+        for (var i = 0; i < input.length * 32; i += 8)
+            output += String.fromCharCode((input[i >> 5] >>> (i % 32)) & 0xFF);
+        return output;
+    };
+    /*
+     * Calculate the MD5 of an array of little-endian words, and a bit length.
+     */
+    MD5.binl_md5 = function (x, len) {
+        /* append padding */
+        x[len >> 5] |= 0x80 << ((len) % 32);
+        x[(((len + 64) >>> 9) << 4) + 14] = len;
+        var a = 1732584193;
+        var b = -271733879;
+        var c = -1732584194;
+        var d = 271733878;
+        for (var i = 0; i < x.length; i += 16) {
+            var olda = a;
+            var oldb = b;
+            var oldc = c;
+            var oldd = d;
+            a = this.md5_ff(a, b, c, d, x[i + 0], 7, -680876936);
+            d = this.md5_ff(d, a, b, c, x[i + 1], 12, -389564586);
+            c = this.md5_ff(c, d, a, b, x[i + 2], 17, 606105819);
+            b = this.md5_ff(b, c, d, a, x[i + 3], 22, -1044525330);
+            a = this.md5_ff(a, b, c, d, x[i + 4], 7, -176418897);
+            d = this.md5_ff(d, a, b, c, x[i + 5], 12, 1200080426);
+            c = this.md5_ff(c, d, a, b, x[i + 6], 17, -1473231341);
+            b = this.md5_ff(b, c, d, a, x[i + 7], 22, -45705983);
+            a = this.md5_ff(a, b, c, d, x[i + 8], 7, 1770035416);
+            d = this.md5_ff(d, a, b, c, x[i + 9], 12, -1958414417);
+            c = this.md5_ff(c, d, a, b, x[i + 10], 17, -42063);
+            b = this.md5_ff(b, c, d, a, x[i + 11], 22, -1990404162);
+            a = this.md5_ff(a, b, c, d, x[i + 12], 7, 1804603682);
+            d = this.md5_ff(d, a, b, c, x[i + 13], 12, -40341101);
+            c = this.md5_ff(c, d, a, b, x[i + 14], 17, -1502002290);
+            b = this.md5_ff(b, c, d, a, x[i + 15], 22, 1236535329);
+            a = this.md5_gg(a, b, c, d, x[i + 1], 5, -165796510);
+            d = this.md5_gg(d, a, b, c, x[i + 6], 9, -1069501632);
+            c = this.md5_gg(c, d, a, b, x[i + 11], 14, 643717713);
+            b = this.md5_gg(b, c, d, a, x[i + 0], 20, -373897302);
+            a = this.md5_gg(a, b, c, d, x[i + 5], 5, -701558691);
+            d = this.md5_gg(d, a, b, c, x[i + 10], 9, 38016083);
+            c = this.md5_gg(c, d, a, b, x[i + 15], 14, -660478335);
+            b = this.md5_gg(b, c, d, a, x[i + 4], 20, -405537848);
+            a = this.md5_gg(a, b, c, d, x[i + 9], 5, 568446438);
+            d = this.md5_gg(d, a, b, c, x[i + 14], 9, -1019803690);
+            c = this.md5_gg(c, d, a, b, x[i + 3], 14, -187363961);
+            b = this.md5_gg(b, c, d, a, x[i + 8], 20, 1163531501);
+            a = this.md5_gg(a, b, c, d, x[i + 13], 5, -1444681467);
+            d = this.md5_gg(d, a, b, c, x[i + 2], 9, -51403784);
+            c = this.md5_gg(c, d, a, b, x[i + 7], 14, 1735328473);
+            b = this.md5_gg(b, c, d, a, x[i + 12], 20, -1926607734);
+            a = this.md5_hh(a, b, c, d, x[i + 5], 4, -378558);
+            d = this.md5_hh(d, a, b, c, x[i + 8], 11, -2022574463);
+            c = this.md5_hh(c, d, a, b, x[i + 11], 16, 1839030562);
+            b = this.md5_hh(b, c, d, a, x[i + 14], 23, -35309556);
+            a = this.md5_hh(a, b, c, d, x[i + 1], 4, -1530992060);
+            d = this.md5_hh(d, a, b, c, x[i + 4], 11, 1272893353);
+            c = this.md5_hh(c, d, a, b, x[i + 7], 16, -155497632);
+            b = this.md5_hh(b, c, d, a, x[i + 10], 23, -1094730640);
+            a = this.md5_hh(a, b, c, d, x[i + 13], 4, 681279174);
+            d = this.md5_hh(d, a, b, c, x[i + 0], 11, -358537222);
+            c = this.md5_hh(c, d, a, b, x[i + 3], 16, -722521979);
+            b = this.md5_hh(b, c, d, a, x[i + 6], 23, 76029189);
+            a = this.md5_hh(a, b, c, d, x[i + 9], 4, -640364487);
+            d = this.md5_hh(d, a, b, c, x[i + 12], 11, -421815835);
+            c = this.md5_hh(c, d, a, b, x[i + 15], 16, 530742520);
+            b = this.md5_hh(b, c, d, a, x[i + 2], 23, -995338651);
+            a = this.md5_ii(a, b, c, d, x[i + 0], 6, -198630844);
+            d = this.md5_ii(d, a, b, c, x[i + 7], 10, 1126891415);
+            c = this.md5_ii(c, d, a, b, x[i + 14], 15, -1416354905);
+            b = this.md5_ii(b, c, d, a, x[i + 5], 21, -57434055);
+            a = this.md5_ii(a, b, c, d, x[i + 12], 6, 1700485571);
+            d = this.md5_ii(d, a, b, c, x[i + 3], 10, -1894986606);
+            c = this.md5_ii(c, d, a, b, x[i + 10], 15, -1051523);
+            b = this.md5_ii(b, c, d, a, x[i + 1], 21, -2054922799);
+            a = this.md5_ii(a, b, c, d, x[i + 8], 6, 1873313359);
+            d = this.md5_ii(d, a, b, c, x[i + 15], 10, -30611744);
+            c = this.md5_ii(c, d, a, b, x[i + 6], 15, -1560198380);
+            b = this.md5_ii(b, c, d, a, x[i + 13], 21, 1309151649);
+            a = this.md5_ii(a, b, c, d, x[i + 4], 6, -145523070);
+            d = this.md5_ii(d, a, b, c, x[i + 11], 10, -1120210379);
+            c = this.md5_ii(c, d, a, b, x[i + 2], 15, 718787259);
+            b = this.md5_ii(b, c, d, a, x[i + 9], 21, -343485551);
+            a = this.safe_add(a, olda);
+            b = this.safe_add(b, oldb);
+            c = this.safe_add(c, oldc);
+            d = this.safe_add(d, oldd);
+        }
+        return [a, b, c, d];
+    };
+    /*
+     * These privates implement the four basic operations the algorithm uses.
+     */
+    MD5.md5_cmn = function (q, a, b, x, s, t) {
+        return this.safe_add(this.bit_rol(this.safe_add(this.safe_add(a, q), this.safe_add(x, t)), s), b);
+    };
+    MD5.md5_ff = function (a, b, c, d, x, s, t) {
+        return this.md5_cmn((b & c) | ((~b) & d), a, b, x, s, t);
+    };
+    MD5.md5_gg = function (a, b, c, d, x, s, t) {
+        return this.md5_cmn((b & d) | (c & (~d)), a, b, x, s, t);
+    };
+    MD5.md5_hh = function (a, b, c, d, x, s, t) {
+        return this.md5_cmn(b ^ c ^ d, a, b, x, s, t);
+    };
+    MD5.md5_ii = function (a, b, c, d, x, s, t) {
+        return this.md5_cmn(c ^ (b | (~d)), a, b, x, s, t);
+    };
+    /*
+     * Add integers, wrapping at 2^32. This uses 16-bit operations internally
+     * to work around bugs in some JS interpreters.
+     */
+    MD5.safe_add = function (x, y) {
+        var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+        var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+        return (msw << 16) | (lsw & 0xFFFF);
+    };
+    /*
+     * Bitwise rotate a 32-bit number to the left.
+     */
+    MD5.bit_rol = function (num, cnt) {
+        return (num << cnt) | (num >>> (32 - cnt));
+    };
+    MD5.hexcase = 0;
+    /* hex output format. 0 - lowercase; 1 - uppercase		*/
+    MD5.b64pad = "";
+    return MD5;
+}());
+__reflect(MD5.prototype, "MD5");
+/**
+ * Created by John on 2019/5/13.
+ */
+var RequestUtils = (function () {
+    function RequestUtils() {
+    }
+    RequestUtils.sendSimpleReq = function (url, param, responseType) {
+        var _this = this;
+        if (responseType === void 0) { responseType = egret.HttpResponseType.TEXT; }
+        return new Promise(function (resolve, reject) {
+            var req = new egret.HttpRequest();
+            req.responseType = responseType;
+            var respHandler = function (evt) {
+                switch (evt.type) {
+                    case egret.Event.COMPLETE:
+                        resolve(req.response);
+                        break;
+                    case egret.IOErrorEvent.IO_ERROR:
+                        reject("\u52A0\u8F7D\u5931\u8D25\uFF1A" + url);
+                        break;
+                }
+            };
+            req.once(egret.Event.COMPLETE, respHandler, _this);
+            req.once(egret.IOErrorEvent.IO_ERROR, respHandler, _this);
+            if (param) {
+                var searchStr = _this.param2ReqSearchStr(param);
+                url += "?" + searchStr;
+            }
+            req.open("" + LocationParam.getProtocol() + url, egret.HttpMethod.GET);
+            req.send();
+        });
+    };
+    RequestUtils.param2ReqSearchStr = function (param) {
+        var keys = Object.keys(param);
+        var str = "";
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            if (i > 0)
+                str += "&";
+            var value = param[key];
+            str += key + "=" + value;
+        }
+        return str;
+    };
+    return RequestUtils;
+}());
+__reflect(RequestUtils.prototype, "RequestUtils");
+//# sourceMappingURL=main.min.js.map

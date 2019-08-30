@@ -1,0 +1,26 @@
+{
+	"file": "ui_sheet_backs.png",
+	"frames": {
+		"win_close1_png": {
+			"x": 183,
+			"y": 0,
+			"w": 44,
+			"h": 44,
+			"offX": 0,
+			"offY": 0,
+			"sourceW": 44,
+			"sourceH": 44
+		},
+		"win1_top_back_png": {
+			"x": 0,
+			"y": 0,
+			"w": 181,
+			"h": 82,
+			"offX": 0,
+			"offY": 0,
+			"sourceW": 181,
+			"sourceH": 82,
+			"scale9grid": "83,52,17,11"
+		}
+	}
+}

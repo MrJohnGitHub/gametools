@@ -1,0 +1,149 @@
+{
+	"groups": [
+		{
+			"keys": "loadingbgbg_jpg",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/xuanfu/btxuanzhefuwuqi.png",
+			"type": "image",
+			"name": "btxuanzhefuwuqi_png"
+		},
+		{
+			"url": "assets/xuanfu/denglulxuanzhetiao.png",
+			"type": "image",
+			"name": "denglulxuanzhetiao_png",
+			"scale9grid": "131,19,225,27"
+		},
+		{
+			"url": "assets/xuanfu/dianjixuanfu.png",
+			"type": "image",
+			"name": "dianjixuanfu_png"
+		},
+		{
+			"url": "assets/xuanfu/loadingtiao.png",
+			"type": "image",
+			"name": "loadingtiao_png"
+		},
+		{
+			"url": "assets/xuanfu/loadingtiaobg.png",
+			"type": "image",
+			"name": "loadingtiaobg_png"
+		},
+		{
+			"url": "assets/xuanfu/jinruyouxianniu.png",
+			"type": "image",
+			"name": "jinruyouxianniu_png"
+		},
+		{
+			"url": "assets/xuanfu/tuijianbiaoqian.png",
+			"type": "image",
+			"name": "tuijianbiaoqian_png"
+		},
+		{
+			"url": "assets/xuanfu/svr_state_2.png",
+			"type": "image",
+			"name": "svr_state_2_png"
+		},
+		{
+			"url": "assets/xuanfu/svr_state_3.png",
+			"type": "image",
+			"name": "svr_state_3_png"
+		},
+		{
+			"url": "assets/xuanfu/svr_state_6.png",
+			"type": "image",
+			"name": "svr_state_6_png"
+		},
+		{
+			"url": "assets/xuanfu/svr_state_0.png",
+			"type": "image",
+			"name": "svr_state_0_png"
+		},
+		{
+			"url": "assets/xuanfu/svr_state_1.png",
+			"type": "image",
+			"name": "svr_state_1_png"
+		},
+		{
+			"url": "assets/xuanfu/gonggaoban.png",
+			"type": "image",
+			"name": "gonggaoban_png"
+		},
+		{
+			"url": "assets/xuanfu/btn1_up.png",
+			"type": "image",
+			"name": "btn1_up_png",
+			"scale9grid": "7,7,5,22"
+		},
+		{
+			"url": "assets/xuanfu/chengjiutupian03.png",
+			"type": "image",
+			"name": "chengjiutupian03_png"
+		},
+		{
+			"url": "assets/xuanfu/progress_back1.png",
+			"type": "image",
+			"name": "progress_back1_png",
+			"scale9grid": "1,3,8,15"
+		},
+		{
+			"url": "assets/xuanfu/teshuyeqian01.png",
+			"type": "image",
+			"name": "teshuyeqian01_png",
+			"scale9grid": "27,22,39,21"
+		},
+		{
+			"url": "assets/xuanfu/teshuyeqian02.png",
+			"type": "image",
+			"name": "teshuyeqian02_png",
+			"scale9grid": "54,23,10,19"
+		},
+		{
+			"url": "assets/xuanfu/tongyongbiaoti.png",
+			"type": "image",
+			"name": "tongyongbiaoti_png"
+		},
+		{
+			"url": "assets/xuanfu/win_back1.png",
+			"type": "image",
+			"name": "win_back1_png",
+			"scale9grid": "11,11,3,5"
+		},
+		{
+			"url": "assets/xuanfu/win_back2.png",
+			"type": "image",
+			"name": "win_back2_png",
+			"scale9grid": "6,6,5,5"
+		},
+		{
+			"url": "assets/xuanfu/xinkuang003.png",
+			"type": "image",
+			"name": "xinkuang003_png",
+			"scale9grid": "21,23,7,9"
+		},
+		{
+			"url": "assets/backs/denglubg.jpg",
+			"type": "image",
+			"name": "denglubg_jpg"
+		},
+		{
+			"url": "assets/backs/loadingbgbg.jpg",
+			"type": "image",
+			"name": "loadingbgbg_jpg"
+		},
+		{
+			"url": "assets/xuanfu/win_close1.png",
+			"type": "image",
+			"name": "win_close1_png"
+		},
+		{
+			"url": "assets/xuanfu/win1_top_back.png",
+			"type": "image",
+			"name": "win1_top_back_png",
+			"scale9grid": "54,49,12,5"
+		}
+	]
+}

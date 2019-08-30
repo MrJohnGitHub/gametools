@@ -1,0 +1,35 @@
+{
+	"options": {
+		"layoutMath": "2",
+		"sizeMode": "free",
+		"useExtension": 1,
+		"layoutGap": 1,
+		"extend": 0
+	},
+	"version": 5,
+	"projectName": "ui_sheet_xuanfu",
+	"files": [
+		"../assets/xuanfu/btxuanzhefuwuqi.png",
+		"../assets/xuanfu/denglulxuanzhetiao.png",
+		"../assets/xuanfu/dianjixuanfu.png",
+		"../assets/xuanfu/loadingtiao.png",
+		"../assets/xuanfu/loadingtiaobg.png",
+		"../assets/xuanfu/jinruyouxianniu.png",
+		"../assets/xuanfu/tuijianbiaoqian.png",
+		"../assets/xuanfu/svr_state_2.png",
+		"../assets/xuanfu/svr_state_3.png",
+		"../assets/xuanfu/svr_state_6.png",
+		"../assets/xuanfu/svr_state_0.png",
+		"../assets/xuanfu/svr_state_1.png",
+		"../assets/xuanfu/gonggaoban.png",
+		"../assets/xuanfu/btn1_up.png",
+		"../assets/xuanfu/chengjiutupian03.png",
+		"../assets/xuanfu/progress_back1.png",
+		"../assets/xuanfu/teshuyeqian01.png",
+		"../assets/xuanfu/teshuyeqian02.png",
+		"../assets/xuanfu/tongyongbiaoti.png",
+		"../assets/xuanfu/win_back1.png",
+		"../assets/xuanfu/win_back2.png",
+		"../assets/xuanfu/xinkuang003.png"
+	]
+}
