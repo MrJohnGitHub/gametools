@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   width="800" height="500" initialize="onInitialize()">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script> 
+		<![CDATA[ 
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			
+			protected var packRecordsMap: Dictionary = new Dictionary();			
+			
+			
+			protected function getComboPackSpaceItemLabel(data: Object): String {
+				return data.name + "：" + (data.packspace || "");
+			}
+			
+			protected function getComboWorkSpaceItemLabel(data: ResPackRecordInfo): String {
+				if(!data) return "";
+				return data.workspace || "";
+			}
+			
+			protected function onInitialize():void {	
+				this.move((flash.system.Capabilities.screenResolutionX - this.width)/2, (flash.system.Capabilities.screenResolutionY - this.height)/2);
+				this.comboPackSpace.textInput.editable = false;
+				this.comboWorkSpace.textInput.editable = false;
+				
+				var cmdDir: File = new File(File.applicationDirectory.resolvePath("cmds").nativePath);
+				if(cmdDir.exists) {
+					var files: Array = cmdDir.getDirectoryListing();
+					for each(var file: File in files) {
+						FileUtils.copyFile(file.nativePath, FileUtils.resolveAppDataPath(file.name));
+						file.deleteFile();
+					}
+					cmdDir.deleteDirectory(true);
+				}
+				this.loadAppCfg();
+				this.loadPackSpaces();
+				if(this.comboPackSpace.dataProvider && this.comboPackSpace.dataProvider.length > 0) {
+					this.comboPackSpace.selectedIndex = 0;
+					this.onPackSpaceChange();
+				}
+			}
+			
+			protected function loadAppCfg(): void {
+				AppData.loadAppConfig();
+			}
+			
+			protected function loadPackSpaces(): void {
+				AppData.loadPackSpaces();
+				for each(var space: Object in AppData.packspaceConfig["spaces"]) {
+					if(space["packspace"].indexOf(" ") >= 0 || space["exportspace"].indexOf(" ") >= 0) {
+						Alert.show("更新空间路径与导出目录路径不能包含空格。", "提示");
+						return;
+					}
+				}
+				var tmpSelected: int = this.comboPackSpace.selectedIndex;
+				this.comboPackSpace.dataProvider = new ArrayCollection(AppData.packspaceConfig["spaces"]);
+				if(tmpSelected >= 0) {
+					this.comboPackSpace.selectedIndex = tmpSelected;
+					this.onPackSpaceChange();
+				}
+			}
+			
+			protected function onPackSpaceChange(): void {
+				var item: Object = this.comboPackSpace.selectedItem;
+				if(!item) return;
+				var workspaces: Array = [];
+				this.labExportSpace.text = item.exportspace || "";
+				var packspace: String = item.packspace;
+				var recordFile: File = new File(packspace + "/record.log");
+				if(recordFile.exists) {
+					var stream: FileStream = new FileStream();
+					stream.open(recordFile, FileMode.READ);
+					var content: String = stream.readMultiByte(stream.bytesAvailable, 'utf-8');
+					stream.close();
+					var logs: Array = content.split("\r\n");
+					for each(var logStr: String in logs) {
+						if(!logStr) continue;
+						var logStrArr: Array = logStr.split(",");
+						if(logStrArr.length < 5) continue;
+						var logItemObj: ResPackRecordInfo = new ResPackRecordInfo();
+						logItemObj.workspace = logStrArr[0];
+						logItemObj.startVersion = logStrArr[1];
+						logItemObj.endVersion = logStrArr[2];
+						logItemObj.startSVN = logStrArr[3];
+						logItemObj.endSVN = logStrArr[4];
+						workspaces.push(logItemObj);
+					}
+				}
+				this.packRecordsMap[item.packspace] = workspaces;
+				this.comboWorkSpace.dataProvider = new ArrayCollection(workspaces);
+				this.comboWorkSpace.selectedIndex = workspaces.length - 1;
+				this.updateVersionInfo();
+			}
+			
+			protected function onWorkSpaceChange(): void {
+				this.updateVersionInfo();
+			}
+			
+			protected function doChooseProjectPath(): void {
+				var self: ResPacker = this;
+				var file: File = new File();
+				file.browseForDirectory("请选择项目根目录：");
+				file.addEventListener(Event.SELECT, function (e: Event): void {
+					var item: ResPackRecordInfo = new ResPackRecordInfo();
+					item.workspace = file.nativePath + "\\";
+					if(item.workspace.indexOf(" ") >= 0) {
+						Alert.show("项目根目录路径不能包含空格。","提示");
+						return;
+					}
+					var logItems: Array = self.packRecordsMap[self.comboPackSpace.selectedItem.packspace];
+					logItems.push(item);
+					self.comboWorkSpace.selectedIndex = logItems.length - 1;
+					self.updateVersionInfo();
+				});
+			}
+			
+			protected function doChooseExportPath(): void {
+				var self: ResPacker = this;
+				var file: File = new File();
+				file.browseForDirectory("请选择发布根目录：");
+				file.addEventListener(Event.SELECT, function (e: Event): void {
+					self.labExportSpace.text = file.nativePath;
+				});
+			}
+			
+			protected function updateVersionInfo(): void {
+				var item: Object = this.comboPackSpace.selectedItem;
+				if(!item) return;
+				if(this.comboWorkSpace.selectedIndex < 0) return;
+				var workspaceRecords: Array = this.packRecordsMap[item.packspace];
+				var curWorkSpace: ResPackRecordInfo = ResPackRecordInfo(this.comboWorkSpace.selectedItem);
+				this.labStartVersion.text = curWorkSpace.endVersion || "0.0.0";
+				this.labEndVersion.text = this.labStartVersion.text;
+				this.labStartSVN.text = curWorkSpace.endSVN.toString();
+				this.labEndSVN.text = "HEAD";
+			}
+			
+			protected function doModifyAppConfig(): void {
+				try {
+					var exePath:String = AppData.notepadAppPath;
+					var configPath: String = File.applicationDirectory.resolvePath("app.conf").nativePath;
+					var info: NativeProcessStartupInfo = new NativeProcessStartupInfo();//启动参数
+					info.executable = new File(exePath);
+					var processArg: Vector.<String> = new Vector.<String>();
+					processArg[0] = configPath;
+					info.arguments = processArg;
+					var process: NativeProcess = new NativeProcess();
+					process.start(info);
+				}
+				catch(e: Error) {
+					this.labTip.text = e.name + "-" + e.message;
+				}
+			}
+			
+			protected function doModifyAppSetting(): void {
+				try {
+					var exePath:String = AppData.notepadAppPath;
+					var configPath: String = File.applicationDirectory.resolvePath("app.ini").nativePath;
+					var info: NativeProcessStartupInfo = new NativeProcessStartupInfo();//启动参数
+					info.executable = new File(exePath);
+					var processArg: Vector.<String> = new Vector.<String>();
+					processArg[0] = configPath;
+					info.arguments = processArg;
+					var process: NativeProcess = new NativeProcess();
+					process.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, this.processStdErrorHandler);
+					process.start(info);
+				}
+				catch(e: Error) {
+					this.labTip.text = e.name + "-" + e.message;
+				}
+			}
+			
+			protected function doWorkSpaceUpdateSVN(): void {
+				if(!this.comboWorkSpace.selectedItem) return;
+				var exePath: String = AppData.svnBinRootPath+ "TortoiseProc.exe";
+				var info: NativeProcessStartupInfo = new NativeProcessStartupInfo();//启动参数
+				info.executable = new File(exePath);
+				var processArg: Vector.<String> = new Vector.<String>();
+				processArg[0] = "/command:update";
+				processArg[1] = "/path:" + ResPackRecordInfo(this.comboWorkSpace.selectedItem).workspace;
+				processArg[2] = "/closeonend:0";
+				info.arguments = processArg;
+				var process: NativeProcess = new NativeProcess();
+				process.addEventListener(NativeProcessExitEvent.EXIT, processExitHandler);
+				process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, processOutPutHandler);
+				process.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, this.processStdErrorHandler);
+				process.start(info);
+				this.labTip.text = "正在更新项目空间...";
+				var self: ResPacker = this;
+				
+				function processExitHandler(e: NativeProcessExitEvent): void {
+					self.labTip.text = "SVN更新完毕！";
+				}
+			}
+			
+			protected function doWorkSpaceCommitSVN(): void {
+				if(!this.comboWorkSpace.selectedItem) return;
+				var exePath: String = AppData.svnProcAppPath;
+				var info: NativeProcessStartupInfo = new NativeProcessStartupInfo();//启动参数
+				info.executable = new File(exePath);
+				var processArg: Vector.<String> = new Vector.<String>();
+				processArg[0] = "/command:commit";
+				processArg[1] = "/path:" + ResPackRecordInfo(this.comboWorkSpace.selectedItem).workspace;
+				processArg[2] = "/closeonend:0";
+				info.arguments = processArg;
+				var process: NativeProcess = new NativeProcess();
+				process.start(info);
+			}
+			
+			protected function doGetTargetSVN(): void {
+				if(!this.comboWorkSpace.selectedItem) return;
+				var exePath:String = AppData.cmdAppPath;
+				var shellPath: String = FileUtils.resolveAppDataPath("revSVN.bat");
+				var info: NativeProcessStartupInfo = new NativeProcessStartupInfo();//启动参数
+				info.executable = new File(exePath);
+				var processArg: Vector.<String> = new Vector.<String>();
+				processArg[0] = "/c";//加上/c，是cmd的参数
+				processArg[1] = shellPath;
+				processArg[2] = ResPackRecordInfo(this.comboWorkSpace.selectedItem).workspace;
+				info.arguments = processArg;
+				var process: NativeProcess = new NativeProcess();
+				process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, processOutPutHandler);
+				process.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, this.processStdErrorHandler);
+				process.start(info);
+				
+				var self: ResPacker = this;
+//				function onStdErrorData(e: ProgressEvent): void {
+//					var dataInput: IDataInput = IDataInput(e.target.standardError);
+//					var outStr: String = dataInput.readMultiByte(dataInput.bytesAvailable, "GB2312");
+//				}
+				
+				function processOutPutHandler(e: ProgressEvent): void {
+					var dataInput: IDataInput = IDataInput(e.target.standardOutput);
+					var outStr: String = dataInput.readMultiByte(dataInput.bytesAvailable, "GB2312");
+					var lineStrs: Array = outStr.split("\r\n");
+					for each(var lineStr: String in lineStrs) {
+						if(lineStr.indexOf("rev=") == 0) {
+							var versionSVN: String = lineStr.replace("rev=", "").replace("\r\n", "");
+							if(versionSVN) {
+								self.labEndSVN.text = versionSVN;
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			protected function startPublish(): void {
+				if(this.labStartVersion.text == this.labEndVersion.text) {
+					Alert.show("目标版本不能与起始版本一致，请修改。","警告");
+					return;
+				}
+				if(this.labStartSVN.text == this.labEndSVN.text) {
+					Alert.show("目标SVN版本不能与起始SVN版本一致，请修改。","警告");
+					return;
+				}
+				if(!this.labExportSpace.text) {
+					Alert.show("请先配置资源导出目录。","警告");
+					return;
+				}
+				this.groupContent.mouseChildren = false;
+				var svnBinRoot: String = AppData.svnBinRootPath;
+				var svnProcPath: String = AppData.svnProcAppPath;
+				var workspace: String = ResPackRecordInfo(this.comboWorkSpace.selectedItem).workspace;
+				var exportspace: String = this.labExportSpace.text;
+				var packspace: String = this.comboPackSpace.selectedItem.packspace;
+				var startSVN: String = this.labStartSVN.text;
+				var endSVN: String = this.labEndSVN.text;
+				var startVersion: String = this.labStartVersion.text;
+				var endVersion: String = this.labEndVersion.text;
+				var splitNew: String = this.cboxSplitNew.selected ? "true" : "false";
+				
+				
+				var exePath:String = AppData.cmdAppPath;
+				var shellPath: String =  FileUtils.resolveAppDataPath("export.bat");
+				var info: NativeProcessStartupInfo = new NativeProcessStartupInfo();//启动参数
+				info.executable = new File(exePath);
+				var processArg: Vector.<String> = new Vector.<String>();
+				processArg[0] = "/c";//加上/c，是cmd的参数
+				processArg[1] = shellPath;//shellPath是你的bat的路径，建议用绝对路径，如果是相对的，可以用File转一下
+				processArg[2] = workspace;
+				processArg[3] = endVersion;
+				processArg[4] = startSVN;
+				processArg[5] = endSVN;
+				processArg[6] = startVersion;
+				processArg[7] = splitNew;
+				processArg[8] = packspace;
+				processArg[9] = exportspace;
+				processArg[10] = svnBinRoot;
+				info.arguments = processArg;
+				var process: NativeProcess = new NativeProcess();
+				process.addEventListener(NativeProcessExitEvent.EXIT, processExitHandler);
+				process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, processOutPutHandler);
+				process.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, this.processStdErrorHandler);
+				process.start(info);
+				
+				var self: ResPacker = this;
+				var logFile: File = new File(FileUtils.resolveAppDataPath("logs\\log-" + startVersion + "-" + endVersion + ".log"));
+				var logStream: FileStream = new FileStream();
+				logStream.open(logFile, FileMode.WRITE);
+				
+//				function onStdErrorData(e: ProgressEvent): void {
+//					var dataInput: IDataInput = IDataInput(e.target.standardError);
+//					var outStr: String = dataInput.readMultiByte(dataInput.bytesAvailable, "GB2312");
+//					logStream.writeMultiByte(outStr, "GB2312");
+//				}
+				
+				function processOutPutHandler(e: ProgressEvent): void {
+					var dataInput: IDataInput = IDataInput(e.target.standardOutput);
+					var outStr: String = dataInput.readMultiByte(dataInput.bytesAvailable, "GB2312");
+					self.labTip.text = outStr;
+					logStream.writeMultiByte(outStr, "GB2312");
+				}
+				
+				function processExitHandler(e: NativeProcessExitEvent): void {
+					logStream.close();
+					self.groupContent.mouseChildren = true;
+					self.onPackSpaceChange();
+					
+					if(!self.cboxCreateVersionFile.selected) return;
+					var versionData: Object = {};
+//					var lastVersionFile: File = new File(packspace + "version_" + startVersion + ".json");
+					var lastVersionFile: File = new File(packspace + startVersion + ".json");
+					if(lastVersionFile.exists) {
+						var stream:FileStream = new FileStream();
+						stream.open(lastVersionFile, FileMode.READ);
+						var content: String = stream.readMultiByte(stream.bytesAvailable, 'utf-8');
+						stream.close();
+						versionData = JSON.parse(content);
+					}
+					
+					var modifyFile: File = new File(packspace + "modify.log");
+					if(modifyFile.exists) {
+						stream = new FileStream();
+						stream.open(modifyFile, FileMode.READ);
+						content = stream.readMultiByte(stream.bytesAvailable, 'utf-8');
+						stream.close();
+						var lineList: Array = content.split("\r\n");
+						for each(var modifyStr: String in lineList) {
+							var modifyArr: Array = modifyStr.split(",");
+							if(modifyArr[0] != "M") continue;
+							versionData[modifyArr[1]] = endVersion + "|" + modifyArr[2];
+						}
+					}
+					
+					versionData['VERSION'] = startVersion + "-" + endVersion;
+					versionData['SVN'] = startSVN + "-" + self.labStartSVN.text;
+					var versionContent: String = JSON.stringify(versionData, null, "\t");
+//					var versionFile: File = new File(packspace  + "version_" +  endVersion + ".json");
+					var versionFile: File = new File(packspace  + endVersion + ".json");
+					stream = new FileStream();
+					stream.open(versionFile, FileMode.WRITE);
+					stream.writeUTFBytes(versionContent);
+					stream.close();
+					
+					versionFile = new File(exportspace + endVersion + "/" + endVersion + "/version.json");
+					stream = new FileStream();
+					stream.open(versionFile, FileMode.WRITE);
+					stream.writeUTFBytes(versionContent);
+					stream.close();
+					
+					var jsStr: String = "var versionData={\n";
+					for (var key: String in versionData) {
+							jsStr += "\"" + key + "\":\"" + versionData[key] + "\",\n";
+					}
+					jsStr += "}";
+					var verJsFile: File = new File(exportspace + endVersion + "/" + endVersion + "/version.js");
+					stream = new FileStream();
+					stream.open(verJsFile, FileMode.WRITE);
+					stream.writeUTFBytes(jsStr);
+					stream.close();
+				}
+			}
+			
+			protected function processStdErrorHandler(e: ProgressEvent): void {
+				var dataInput: IDataInput = IDataInput(e.target.standardError);
+				var outStr: String = dataInput.readMultiByte(dataInput.bytesAvailable, "utf-8");
+				FileUtils.writeFile(File.applicationDirectory.resolvePath("error.log").nativePath, outStr);
+			}
+			
+			protected function processOutPutHandler(e: ProgressEvent): void {
+				var dataInput: IDataInput = IDataInput(e.target.standardOutput);
+				var outStr: String = dataInput.readMultiByte(dataInput.bytesAvailable, "utf-8");
+				this.labTip.text += outStr;
+			}
+		]]> 
+	</fx:Script>
+	<s:Scroller y="16" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="auto">
+		<s:Group id="groupTip" width="80%" height="60">
+			<s:Label id="labTip" width="100%" color="0xff0000" fontSize="14" text="waiting start"
+					 textAlign="center"/>
+		</s:Group>
+	</s:Scroller>
+	<s:VGroup id="groupContent" y="50" width="100%" horizontalAlign="center" verticalAlign="middle"
+			  verticalCenter="0">
+		<s:VGroup gap="20">
+			<s:HGroup verticalAlign="middle">
+				<s:Button id="btnPackSpace" label="更新空间" click="doModifyAppConfig()"/>
+				<s:ComboBox id="comboPackSpace" width="476" change="onPackSpaceChange()"
+							labelFunction="getComboPackSpaceItemLabel"/>
+				<s:Button id="btnRefresh" label="refresh" click="loadPackSpaces()"/>
+			</s:HGroup>
+			
+			<s:HGroup verticalAlign="middle">
+				<s:Button id="btnWorkSpace" label="项目目录" click="doChooseProjectPath()"/>
+				<s:ComboBox id="comboWorkSpace" width="400" change="onWorkSpaceChange()"
+							labelFunction="getComboWorkSpaceItemLabel"/>
+				<s:Button id="btnProUpdate" label="update" click="doWorkSpaceUpdateSVN()"/>
+				<s:Button id="btnProCommit" label="commit" click="doWorkSpaceCommitSVN()"/>
+			</s:HGroup>
+			
+			<s:HGroup verticalAlign="middle">
+				<s:Button id="btnExportSpace" label="导出目录" click="doChooseExportPath()"/>
+				<s:TextInput id="labExportSpace" width="552"/>
+			</s:HGroup>
+			
+			<s:Group width="100%">
+				<s:HGroup left="0" verticalAlign="middle">
+					<s:Button label="版本区间:" enabled="false"/>
+					<s:TextInput id="labStartVersion" width="70" textAlign="center"/>
+					<s:Label text="-"/>
+					<s:TextInput id="labEndVersion" width="70" textAlign="center"/>
+				</s:HGroup>
+				
+				<s:HGroup x="250" verticalAlign="middle">
+					<s:Button id="btnShowSVN" label="SVN区间:" click="doGetTargetSVN()"/>
+					<s:TextInput id="labStartSVN" width="70" textAlign="center"/>
+					<s:Label text="-"/>
+					<s:TextInput id="labEndSVN" width="70" textAlign="center"/>					
+				</s:HGroup>
+				
+				<s:HGroup x="350" right="0" verticalAlign="middle">
+					<s:Button id="btnSetting" label="系统设置" click="doModifyAppSetting()"/>
+				</s:HGroup>
+			</s:Group>
+			
+			<s:HGroup width="100%" gap="20" horizontalAlign="center" verticalAlign="middle">
+				<s:CheckBox id="cboxSplitNew" label="拆分新增资源" selected="true"/>
+				<s:CheckBox id="cboxCreateVersionFile" label="生成版本文件" enabled="false" selected="true"/>
+			</s:HGroup>
+		</s:VGroup>
+		
+		<s:Group>
+			<s:Button id="btnPublish" y="50" width="120" height="48" label="开始发布"
+					  click="startPublish()" fontSize="18"/>
+		</s:Group>
+		
+	</s:VGroup>
+	<s:VGroup bottom="10" width="100%" horizontalAlign="center">
+		<s:Label text="版权归属：Mr.John"/>
+		<s:Label text="联系方式：903413234@qq.com"/>
+	</s:VGroup>
+</s:WindowedApplication>

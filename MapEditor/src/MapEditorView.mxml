@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 resize="onResize(event)">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import flash.utils.getTimer;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.graphics.SolidColor;
+			
+			import spark.components.Image;
+			import spark.primitives.Rect;
+			
+			public var gridPool: Array = [];
+			public var mapRoot: File;
+			public var mapWidth: int = 0;
+			public var mapHeight: int = 0;
+			public var maxGridX: int = 0;
+			public var maxGridY: int = 0;
+			public var images: Dictionary = new Dictionary();
+			public var grids: Array = [];
+			public var gridsData: Array;
+			public var editMode: int;
+			
+			public var editModes: ArrayCollection = new ArrayCollection([
+				{editType: EditMode.DRAW_BLOCK, label: "阻挡区", color:0x0000ff},
+				{editType: EditMode.DRAW_ALPHA, label: "透明区", color:0xffffff},
+				{editType: EditMode.DRAW_REDNAME, label: "安全区", color:0xff0000},
+			]);
+			
+			public static var BlockColor:BitmapData;
+			public static var AlphaColor:BitmapData;
+			public static var EmptyColor:BitmapData;
+			
+//			public function MapEditorView() 
+//			{
+//				super();
+//				
+//				var shape: Shape = new Shape();
+//				shape.graphics.beginFill(0xFF0000, 0.1);
+//				shape.graphics.drawRect(0, 0, Config.GRID_WIDTH - 2, Config.GRID_HEIGHT - 2);
+//				shape.graphics.endFill();
+//				var bitmapData:BitmapData = new BitmapData(shape.width, shape.height);
+//				bitmapData.draw(shape);
+//				MapEditorView.EmptyColor = bitmapData;
+//				
+//				shape.graphics.clear();
+//				shape.graphics.beginFill(0x0000FF, 0.1);
+//				shape.graphics.drawRect(0, 0, Config.GRID_WIDTH - 2, Config.GRID_HEIGHT - 2);
+//				shape.graphics.endFill();
+//				bitmapData = new BitmapData(shape.width, shape.height);
+//				bitmapData.draw(shape);
+//				MapEditorView.BlockColor = bitmapData;
+//				
+//				shape.graphics.clear();
+//				shape.graphics.beginFill(0xFFFFFF, 0.1);
+//				shape.graphics.drawRect(0, 0, Config.GRID_WIDTH - 2, Config.GRID_HEIGHT - 2);
+//				shape.graphics.endFill();
+//				bitmapData = new BitmapData(shape.width, shape.height);
+//				bitmapData.draw(shape);
+//				MapEditorView.AlphaColor = bitmapData;
+//			}
+			
+			public function loadMapData():void {
+				this.gridsData = null;
+				var dataFile: File = new File(mapRoot.nativePath + "\\data.json");
+				if(dataFile.exists) {
+					var fs:FileStream = new FileStream();
+					fs.open(dataFile,FileMode.READ);
+					var content:String = fs.readUTFBytes(fs.bytesAvailable);
+					var data: Object = JSON.parse(content);
+					this.gridsData = data.grids;
+				}
+				else {
+					this.gridsData = [];
+					var count: int = this.maxGridX * this.maxGridY;
+					for(var i: int = 0; i < count ; i++) {
+						this.gridsData.push(0);
+					}
+				}
+			}
+						
+			private function pix2gridx(x: int): int {
+				return x / Config.GRID_WIDTH >> 0;
+			}
+			
+			private function pix2gridy(y: int): int {
+				return y / Config.GRID_HEIGHT >> 0;
+			}
+			
+			public function setEditMap(root: File):void {
+				this.mapRoot = root;
+				this.editMode = EditMode.DRAW_BLOCK;
+				this.editModeCombo.selectedIndex = 0;
+				this.clearModeBox.selected = false;
+				SolidColor(this.gridRect.fill).color = EditMode.getStateColor(this.editMode);
+				this.gridRect.width = Config.GRID_WIDTH;
+				this.gridRect.height = Config.GRID_HEIGHT;
+				
+				var imgRoot: File = new File(root.nativePath + "\\image");
+				var imgs: Array = imgRoot.getDirectoryListing();
+				this.mapWidth = 0;
+				this.mapHeight = 0;
+				this.gridLayer.removeAllElements();
+				this.scrollLayer.y = this.topBar.height;
+				this.images = new Dictionary();
+				for each(var imgFile: File in imgs) {
+					if(imgFile.extension.indexOf("jpg") < 0) continue;
+					var image: Image = new Image();
+					image.source = imgFile.nativePath;
+					var name: String = imgFile.name;
+					var indexArr: Array = name.split(".")[0].split("_");
+					var xIndex: int = parseInt(indexArr[1]);
+					var yIndex: int = parseInt(indexArr[0]);
+					image.x = xIndex * 256;
+					image.y = yIndex * 256;
+					this.images[yIndex + "_" + xIndex] = image;
+//					this.imgLayer.addElement(image);
+					
+					this.mapWidth = Math.max(this.mapWidth, (xIndex+1) * 256);
+					this.mapHeight = Math.max(this.mapHeight, (yIndex+1) * 256);
+				}
+				this.maxGridX = this.mapWidth / Config.GRID_WIDTH;
+				this.maxGridY = this.mapHeight / Config.GRID_HEIGHT;
+				this.loadMapData();
+				
+				this.scrollLayer.x = 0;
+				this.scrollLayer.y = 0;
+				this.updateShowImgs();
+				
+				if(this.grids.length > 0) {
+					this.gridPool = this.gridPool.concat(this.grids);
+				}
+				this.grids = [];
+				var start:int = getTimer();
+				var fromX:int = 0;
+				var fromY:int = 0;
+				var toX:int = this.stage.stageWidth * 2;
+				var toY:int = this.stage.stageHeight * 2;
+				var showRect:Rectangle = new Rectangle(fromX, fromY, toX - fromX, toY - fromY);
+				for(var gridx: int = 0; gridx < this.maxGridX; gridx++) {
+					for(var gridy: int = 0; gridy < this.maxGridY; gridy++) {
+						var rect: Rect = this.gridPool.pop();
+						if(rect == null) rect = new Rect();
+						rect.fill = new SolidColor();
+						rect.width = Config.GRID_WIDTH - 4;
+						rect.height = Config.GRID_HEIGHT - 4;
+						rect.x = gridx * Config.GRID_WIDTH + 2;
+						rect.y = gridy * Config.GRID_HEIGHT + 2;
+//						if(showRect.contains(rect.x, rect.y)) {
+//							this.gridLayer.addElement(rect);
+//						}
+						this.grids.push(rect);
+						var index: int = this.getGridIndex(gridx, gridy);
+						this.updateGridColor(index);
+					}
+				}
+				trace("InitGrids Cost: " + (getTimer() - start));
+				this.updateShowGrids();
+			}
+			
+			public function updateShowGrids():void {
+				var fromX:int = Math.max(0, -this.scrollLayer.x - Capabilities.screenResolutionX);
+				var fromY:int = Math.max(0, -this.scrollLayer.y - Capabilities.screenResolutionY);
+				var toX:int = Math.min(fromX + 3 * Capabilities.screenResolutionX, this.mapWidth);
+				var toY:int = Math.min(fromY + 3 * Capabilities.screenResolutionY, this.mapHeight);
+				for each(var gridRect:Rect in this.grids) {
+					if(gridRect.x >= fromX && gridRect.x <= toX && gridRect.y >= fromY && gridRect.y <= toY) {
+						if(!gridRect.parent) {
+							this.gridLayer.addElement(gridRect);
+						}
+					}
+					else if(gridRect.parent) {
+						this.gridLayer.removeElement(gridRect);
+					}
+				}
+			}
+			
+			private function updateShowImgs():void {
+				this.imgLayer.removeAllElements();
+				var xIndex: int = (-this.scrollLayer.x / Config.MAP_TILE_SIZE >> 0);
+				var yIndex: int = (-this.scrollLayer.y / Config.MAP_TILE_SIZE >> 0);
+				xIndex = Math.max(xIndex, 0);
+				xIndex = Math.min(xIndex,this.mapWidth/Config.MAP_TILE_SIZE - 9);
+				yIndex = Math.max(yIndex, 0);
+				yIndex = Math.min(yIndex,this.mapHeight/Config.MAP_TILE_SIZE - 5);
+				var endxIndex:int = xIndex + 9;
+				var endyIndex:int = yIndex + 5;
+				var showCount:int = this.imgLayer.numElements;
+				for(var i:int = showCount - 1; i >= 0; i--) {
+					image = Image(this.imgLayer.getElementAt(i));
+					var imagexIndex: int = image.x / Config.MAP_TILE_SIZE;
+					var imageyIndex: int = image.y / Config.MAP_TILE_SIZE;
+					if(imagexIndex < xIndex || imagexIndex > endxIndex || imageyIndex < yIndex || imageyIndex > endyIndex) {
+						this.imgLayer.removeElement(image);
+					}
+				}
+				
+				for(var x:int = xIndex; x < endxIndex; x++) {
+					for(var y:int = yIndex; y < endyIndex; y++) {
+						var image: Image = this.images[y + "_" + x];
+						this.imgLayer.addElement(image);
+					}
+				}
+			}
+			
+			private function getGridColor(index: int, editMode: int): int {
+				var value: int = this.gridsData[index];
+				if(EditMode.isState(value, editMode)) {
+					return EditMode.getStateColor(this.editMode);
+				}
+				else if(EditMode.isState(value, EditMode.DRAW_BLOCK)){
+					return EditMode.getStateColor(EditMode.DRAW_BLOCK);	
+				}
+				return -1;
+			}
+			
+			private function updateAllGridsColor():void {
+				for(var i: int = 0; i < this.grids.length; i++) {
+					this.updateGridColor(i);
+				}
+			}
+			
+			private function updateGridColor(index: int):void {
+				var grid: Rect = this.grids[index];
+				var value: int = this.gridsData[index];
+				if(EditMode.isState(value, this.editMode)) {
+					SolidColor(grid.fill).color = EditMode.getStateColor(this.editMode);
+					SolidColor(grid.fill).alpha = 0.3;
+				}
+				else if(EditMode.isState(value, EditMode.DRAW_BLOCK)){
+					SolidColor(grid.fill).color = EditMode.getStateColor(EditMode.DRAW_BLOCK);
+					SolidColor(grid.fill).alpha = 0.3;
+				}
+				else {
+					SolidColor(grid.fill).color = 0xff0000;
+					SolidColor(grid.fill).alpha = 0.1;
+				}
+			}
+			
+			public function getGridIndex(gridx: int, gridy: int): int {
+				return this.maxGridY * gridx + gridy;
+			}
+			
+			private function onResize(event: Event):void {
+				if(!this.stage) return;
+				this.width = this.stage.stageWidth;
+				this.height = this.stage.stageHeight;
+			}
+			
+			private var _isRightMouseDown: Boolean = false;
+			private var _rightMouseDownPos: Point;
+			private var _rightMouseDownStartPos: Point;
+			private function onRightMouseDown(event: MouseEvent):void {
+				this._isRightMouseDown = true;
+				this._rightMouseDownPos = new Point(event.stageX, event.stageY);
+				this._rightMouseDownStartPos = new Point(this.scrollLayer.x, this.scrollLayer.y);
+				this.stage.addEventListener(MouseEvent.MOUSE_MOVE, this.onRightMouseDownMove);
+			}
+			
+			private function onRightMouseUp(event: MouseEvent):void {
+				if(!this._isRightMouseDown) return;
+				this.updateShowImgs();
+				this.updateShowGrids();
+				this.scrollLayer.removeEventListener(MouseEvent.MOUSE_MOVE, this.onRightMouseDownMove);
+				this._isRightMouseDown = false;
+				this._rightMouseDownPos = null;
+			}
+			
+			private function onRightMouseDownMove(event: MouseEvent):void {
+				if(!this._isRightMouseDown) return;
+				this.scrollLayer.x = _rightMouseDownStartPos.x + event.stageX - this._rightMouseDownPos.x;
+				this.scrollLayer.y = _rightMouseDownStartPos.y + event.stageY - this._rightMouseDownPos.y;
+			}
+			
+			private function onMouseMove(event: MouseEvent):void {
+				if(event.localX > this.mapWidth) return;
+				if(event.localY > this.mapHeight) return;
+				var gridX: int = event.localX / Config.GRID_WIDTH >> 0;
+				var gridY: int = event.localY / Config.GRID_HEIGHT >> 0;
+				this.gridInfoLabel.x = event.localX;
+				this.gridInfoLabel.y = event.localY;
+				var index: int = this.getGridIndex(gridX, gridY);
+				this.gridInfoLabel.text = "格子XY：" +gridX + "，" + gridY + "\n" 
+										  + "鼠标XY：" + event.localX + "，" + event.localY + "\n" 
+										  + "格子值：" + this.gridsData[index];
+				this.gridRect.x = gridX * Config.GRID_WIDTH;
+				this.gridRect.y = gridY * Config.GRID_HEIGHT;
+			}	
+			
+			private var _isMouseDown: Boolean = false;
+			private var _mouseDownPos: Point;
+			private function onMouseDown(event: MouseEvent):void {
+				this._isMouseDown = true;
+				this._mouseDownPos = new Point(event.localX, event.localY);
+				SolidColor(this.drawRect.fill).color = EditMode.getStateColor(this.editMode);
+				this.drawRect.width = this.drawRect.height = 0;
+				this.scrollLayer.addEventListener(MouseEvent.MOUSE_MOVE, this.onLeftMouseDownMove);
+			}
+		
+			private function onMouseUp(event: MouseEvent):void {
+				if(!this._isMouseDown) return;
+				this.scrollLayer.removeEventListener(MouseEvent.MOUSE_MOVE, this.onLeftMouseDownMove);
+				this._isMouseDown = false;
+				this._mouseDownPos = null;
+				
+				var sgridx: int = this.pix2gridx(this.drawRect.x);
+				var sgridy: int = this.pix2gridy(this.drawRect.y);
+				var tgridx: int = this.pix2gridx(this.drawRect.x + this.drawRect.width);
+				var tgridy: int = this.pix2gridy(this.drawRect.y + this.drawRect.height);
+				for(var gridx: int = sgridx; gridx <= tgridx; gridx++) {
+					for(var gridy: int = sgridy; gridy <= tgridy; gridy++) {
+						var index: int = this.getGridIndex(gridx, gridy);
+						if(this.clearModeBox.selected) {
+							this.gridsData[index] = ((~0) ^ this.editMode) & this.gridsData[index];
+						}
+						else {
+							this.gridsData[index] = this.gridsData[index] | this.editMode;
+						}
+						this.updateGridColor(index);
+					}
+				}
+				this.drawRect.width = this.drawRect.height = 0;
+			}
+			
+			private function onLeftMouseDownMove(event: MouseEvent):void {
+				if(!this._isMouseDown) return;
+				var x: int = Math.min(event.localX, this._mouseDownPos.x);
+				var y: int = Math.min(event.localY, this._mouseDownPos.y);
+				var width: int = Math.abs(event.localX - this._mouseDownPos.x);
+				var height: int = Math.abs(event.localY - this._mouseDownPos.y);
+				this.drawRect.x = x;
+				this.drawRect.y = y;
+				this.drawRect.width = width;
+				this.drawRect.height = height;
+			}
+			
+			private function onEditModeChange(event: Event):void {
+				this.editMode = this.editModeCombo.selectedItem.editType;
+				SolidColor(this.gridRect.fill).color = EditMode.getStateColor(this.editMode);
+				this.gridRect.width = Config.GRID_WIDTH;
+				this.gridRect.height = Config.GRID_HEIGHT;
+				this.updateAllGridsColor();
+			}
+			
+			private function onReloadDataClick(event: MouseEvent):void {
+				this.loadMapData();
+				this.updateAllGridsColor();
+			}
+			
+			private function onSaveDataClick(event: MouseEvent):void {
+//				this.saveMapData();
+				App.saveMapData(this.mapRoot.name, this.mapWidth, this.mapHeight, this.gridsData);
+			}
+			
+			private function onScaleReduce(e:MouseEvent):void {
+				if(this.scrollLayer.scaleX < 0.5) return;
+				this.scrollLayer.scaleX = this.scrollLayer.scaleY = this.scrollLayer.scaleX - 0.1;
+			}
+			
+			private function onScaleAdd(e:MouseEvent):void {
+				if(this.scrollLayer.scaleX >= 1) return;
+				this.scrollLayer.scaleX = this.scrollLayer.scaleY = this.scrollLayer.scaleX + 0.1;
+			}
+			
+			private function onExitClick(event: MouseEvent):void {
+				var self: MapEditorView = this;
+				Alert.show("确认要退出编辑吗？\n退出前请确认保存数据，以免造成数据丢失。",
+					"退出提示",
+					Alert.YES|Alert.NO,
+					null,
+					function(event:CloseEvent):void {
+						if(event.detail==Alert.YES) {
+							self.visible = false;
+						}
+					},
+					null,
+					Alert.NO);
+			}
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%">
+		<s:fill>
+			<s:SolidColor color="#D3D3D3" />
+		</s:fill>
+	</s:Rect>
+	<s:Group width="100%" height="100%">
+		<s:Group id="scrollLayer" mouseChildren="false" mouseMove="onMouseMove(event)" mouseDown="onMouseDown(event)" mouseUp="onMouseUp(event)" rightMouseDown="onRightMouseDown(event)" rightMouseUp="onRightMouseUp(event)">
+			<s:Group id="imgLayer">
+			</s:Group>
+			<s:Group id="gridLayer">
+			</s:Group>
+			<s:Rect id="gridRect">
+				<s:fill>
+					<s:SolidColor alpha="0.3">
+					</s:SolidColor>
+				</s:fill>
+			</s:Rect>
+			<s:Label id="gridInfoLabel" color="0xFFFFFF">
+			</s:Label>
+			<s:Rect id="drawRect">
+				<s:fill>
+					<s:SolidColor alpha="0.3">
+					</s:SolidColor>
+				</s:fill>
+			</s:Rect>
+		</s:Group>
+	</s:Group>
+	<s:Group id="topBar" width="100%" height="40">
+		<s:Rect width="100%" height="100%">
+			<s:fill>
+				<s:SolidColor color="#87CEFA" />
+			</s:fill>
+		</s:Rect>
+		<s:Group height="100%">
+			<s:layout>
+				<s:HorizontalLayout paddingLeft="20" gap="20" verticalAlign="middle"/>  
+			</s:layout>
+			<s:ComboBox id="editModeCombo" focusIn="editModeCombo.textInput.editable=false" 
+						dataProvider="{this.editModes}" selectedIndex="0" change="onEditModeChange(event)">
+			</s:ComboBox>
+			<s:CheckBox id="clearModeBox" label="擦除模式">
+			</s:CheckBox>
+			<s:Button width="80" height="30" click="onReloadDataClick(event)">
+				<s:label>刷新数据</s:label>
+			</s:Button>
+			<s:Button width="80" height="30" click="onScaleReduce(event)">
+				<s:label>缩小</s:label>
+			</s:Button>
+			<s:Button width="80" height="30" click="onScaleAdd(event)">
+				<s:label>放大</s:label>
+			</s:Button>
+			<s:Button width="80" height="30" click="onSaveDataClick(event)">
+				<s:label>保存数据</s:label>
+			</s:Button>
+		</s:Group>
+		<s:Button width="80" height="30" click="onExitClick(event)" verticalCenter="0" right="10">
+			<s:label>退出编辑</s:label>
+		</s:Button>
+	</s:Group>
+</s:Group>

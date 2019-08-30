@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   addedToStage="addToStage(event)"
+					   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:local="*">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.ListEvent;
+			import mx.logging.LogLogger;
+			import mx.managers.PopUpManager;
+			private var _rootDir: File;
+			private function addToStage(e: Event): void {
+				App.main = this;
+				App.init();
+				App.loadConfig();
+				this.updatePath();
+				this.updateList();
+				this.maximize();
+			}
+			
+			public function updateList():void {
+				var workRoot: File = new File(Config.workspace);
+				var list: Array = workRoot.getDirectoryListing();
+				for(var i:int = list.length - 1; i >= 0; i--) {
+					var file: File = list[i];
+					if(!file.isDirectory) {
+						list.splice(i, 1);
+					}
+				}
+				this.dg.dataProvider = new ArrayCollection(list);
+			}
+			
+			protected function updatePath():void {
+				this.pathLabel.text = "client: " + Config.workspace + "\nserver: " + Config.svrRootPath;
+			}
+			
+			protected function setWorkSpaceClick(event:MouseEvent):void {
+				var file:File = new File(Config.workspace);
+				file.browseForDirectory("");
+				file.addEventListener(Event.SELECT, this.onSelectWorkSpace);
+			}
+			
+			protected function onSelectWorkSpace(e:Event):void{
+				var file:File = e.currentTarget as File;
+				Config.svrRootPath = null;
+				Config.workspace = file.nativePath;
+				App.saveConfig();
+				this.updatePath();
+				this.updateList();
+			}
+			
+			protected function setSvrRootClick(event:MouseEvent):void {
+				var file:File = new File(Config.svrRootPath);
+				file.browseForDirectory("");
+				file.addEventListener(Event.SELECT, this.onSelectSvrRoot);
+			}
+			
+			protected function onSelectSvrRoot(e:Event):void{
+				try {
+					var file:File = e.currentTarget as File;
+					Config.svrRootPath = file.nativePath;
+					App.saveConfig();
+					this.updatePath();
+				}
+				catch(e:Error) {
+					Alert.show(e.message);
+				}
+			}
+			
+			protected function importNewMap(event:MouseEvent):void {
+				var file:File = new File();
+				file.browseForOpen("", [new FileFilter("Images","*.jpg")]);
+				file.addEventListener(Event.SELECT, this.onSelectNewMap);
+			}
+			
+			protected function onSelectNewMap(e:Event):void {
+				var file:File = e.currentTarget as File;
+				var mapRoot:String = file.parent.nativePath;
+				var mapName:String = file.name.split(".")[0];
+				
+				var cmdFile:File=new File();  
+				cmdFile = cmdFile.resolvePath("C:\\Windows\\System32\\cmd.exe");  
+				var nativeProcessStartupInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo();  
+				nativeProcessStartupInfo.executable = cmdFile;  
+				var processArgs:Vector.<String> = new Vector.<String>();  
+				
+//				processArgs[0] = "/c";
+//				processArgs[1] = File.applicationDirectory.nativePath + "\\start.bat";
+//				processArgs[2] = "abc";
+				
+				processArgs[0] = "/c";
+				processArgs[1] = "python";
+				processArgs[2] = File.applicationDirectory.nativePath + "\\mapsplit.py";
+				processArgs[3] = mapRoot;
+				processArgs[4] = Config.workspace;
+				processArgs[5] = mapName;
+				processArgs[6] = "256";
+				
+				nativeProcessStartupInfo.arguments=processArgs;
+				var process:NativeProcess = new NativeProcess();
+				process.start(nativeProcessStartupInfo);
+				var that:MapEditor = this;
+				process.addEventListener(NativeProcessExitEvent.EXIT,function (event:NativeProcessExitEvent):void {
+					that.updateList();
+					if(alert) PopUpManager.removePopUp(alert);
+				});
+				process.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, function (event:ProgressEvent):void {
+					var str:String = process.standardError.readUTFBytes(process.standardError.bytesAvailable);
+					App.logger.error(str);
+					Alert.show(str);
+				});
+				process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA,function (event:ProgressEvent):void {
+					var str:String = process.standardOutput.readUTFBytes(process.standardOutput.bytesAvailable);
+					trace(str);
+				});
+				
+				var alert:Alert = Alert.show("正在切图,请稍等。", "提示");
+//				process.closeInput();
+			}
+			
+			protected function onExportJsonClick(event:MouseEvent):void {
+				App.exportMapsData();
+			}
+			
+			protected function onImportJsonClick(event:MouseEvent):void {
+				App.loadMapsJsonData();
+			}
+			
+			protected function onMapClick(event:ListEvent):void {
+				var file: File = event.itemRenderer.data as File;
+				if(!file.isDirectory) return;
+				this.previewImg.source = file.nativePath + "\\small.jpg";
+			}
+			
+			protected function onMapDBClick(event:ListEvent):void {
+				var file: File = event.itemRenderer.data as File;
+				if(!file.isDirectory) return;
+				this.editorView.visible = true;
+				this.editorView.setEditMap(file);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout verticalAlign="middle" paddingLeft="10" paddingTop="10" gap="10"/>  
+		</s:layout>
+		<s:Button height="24" click="setWorkSpaceClick(event)">
+			<s:label>选择工作目录</s:label>
+		</s:Button>
+		<s:Button height="24" click="setSvrRootClick(event)">
+			<s:label>设置后端输出目录</s:label>
+		</s:Button>
+		<s:Button height="24" click="importNewMap(event)">
+			<s:label>导入新地图</s:label>
+		</s:Button>
+		<s:Button height="24" click="onExportJsonClick(event)">
+			<s:label>导出json</s:label>
+		</s:Button>
+		<s:Label id="pathLabel">
+		</s:Label>
+	</s:Group>
+	<mx:DividedBox id="dbox" direction="horizontal" top="45" width="100%" height="100%">
+		<mx:VDividedBox direction="vertical" width="70%" height="100%">
+			<mx:DataGrid id="dg" width="100%" height="100%" doubleClickEnabled="true" itemClick="onMapClick(event)" itemDoubleClick="onMapDBClick(event)">
+				<mx:columns>
+					<mx:DataGridColumn dataField="name" headerText="Name" width="100"/>
+					<mx:DataGridColumn dataField="isDirectory" headerText="Directory" width="100"/>
+					<mx:DataGridColumn dataField="nativePath" headerText="Path"/>
+				</mx:columns>
+			</mx:DataGrid>
+		</mx:VDividedBox>
+		<mx:VDividedBox direction="vertical" width="30%" height="100%" horizontalAlign="center" verticalAlign="middle">
+			<s:Image id="previewImg">
+			</s:Image>
+		</mx:VDividedBox>
+	</mx:DividedBox>
+	<local:MapEditorView id="editorView" visible="false" width="100%" height="100%">
+	</local:MapEditorView>
+</s:WindowedApplication>

@@ -1,0 +1,1443 @@
+{
+"NeiGongConfig": {
+"0": {
+"attrs": [
+{
+"id": 9,
+"value": 0
+},
+{
+"id": 10,
+"value": 0
+},
+{
+"id": 11,
+"value": 0
+}
+],
+"costVal": 900,
+"id": 0,
+"nextId": 1,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"4",
+"副本",
+"DupWin"
+]
+]
+},
+"1": {
+"costVal": 1000,
+"id": 1,
+"nextId": 2,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"5",
+"副本",
+"DupWin"
+]
+]
+},
+"10": {
+"costVal": 2350,
+"id": 10,
+"nextId": 11,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"14",
+"副本",
+"DupWin"
+]
+]
+},
+"100": {
+"costVal": 60400,
+"id": 100,
+"nextId": 101
+},
+"101": {
+"costVal": 61500,
+"id": 101,
+"nextId": 102
+},
+"102": {
+"costVal": 62610,
+"id": 102,
+"nextId": 103
+},
+"103": {
+"costVal": 63730,
+"id": 103,
+"nextId": 104
+},
+"104": {
+"costVal": 64860,
+"id": 104,
+"nextId": 105
+},
+"105": {
+"costVal": 66000,
+"id": 105,
+"nextId": 106
+},
+"106": {
+"costVal": 67150,
+"id": 106,
+"nextId": 107
+},
+"107": {
+"costVal": 68310,
+"id": 107,
+"nextId": 108
+},
+"108": {
+"costVal": 69480,
+"id": 108,
+"nextId": 109
+},
+"109": {
+"costVal": 70660,
+"id": 109,
+"nextId": 110
+},
+"11": {
+"costVal": 2550,
+"id": 11,
+"nextId": 12,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"15",
+"副本",
+"DupWin"
+]
+]
+},
+"110": {
+"costVal": 71850,
+"id": 110,
+"nextId": 111
+},
+"111": {
+"costVal": 73050,
+"id": 111,
+"nextId": 112
+},
+"112": {
+"costVal": 74260,
+"id": 112,
+"nextId": 113
+},
+"113": {
+"costVal": 75480,
+"id": 113,
+"nextId": 114
+},
+"114": {
+"costVal": 76710,
+"id": 114,
+"nextId": 115
+},
+"115": {
+"costVal": 77950,
+"id": 115,
+"nextId": 116
+},
+"116": {
+"costVal": 79200,
+"id": 116,
+"nextId": 117
+},
+"117": {
+"costVal": 80460,
+"id": 117,
+"nextId": 118
+},
+"118": {
+"costVal": 81730,
+"id": 118,
+"nextId": 119
+},
+"119": {
+"costVal": 83230,
+"id": 119,
+"nextId": 120
+},
+"12": {
+"costVal": 2760,
+"id": 12,
+"nextId": 13,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"16",
+"副本",
+"DupWin"
+]
+]
+},
+"120": {
+"costVal": 84750,
+"id": 120,
+"nextId": 121
+},
+"121": {
+"costVal": 86290,
+"id": 121,
+"nextId": 122
+},
+"122": {
+"costVal": 87850,
+"id": 122,
+"nextId": 123
+},
+"123": {
+"costVal": 89430,
+"id": 123,
+"nextId": 124
+},
+"124": {
+"costVal": 91030,
+"id": 124,
+"nextId": 125
+},
+"125": {
+"costVal": 92650,
+"id": 125,
+"nextId": 126
+},
+"126": {
+"costVal": 94290,
+"id": 126,
+"nextId": 127
+},
+"127": {
+"costVal": 95950,
+"id": 127,
+"nextId": 128
+},
+"128": {
+"costVal": 97630,
+"id": 128,
+"nextId": 129
+},
+"129": {
+"costVal": 99330,
+"id": 129,
+"nextId": 130
+},
+"13": {
+"costVal": 2980,
+"id": 13,
+"nextId": 14,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"17",
+"副本",
+"DupWin"
+]
+]
+},
+"130": {
+"costVal": 101050,
+"id": 130,
+"nextId": 131
+},
+"131": {
+"costVal": 102790,
+"id": 131,
+"nextId": 132
+},
+"132": {
+"costVal": 104550,
+"id": 132,
+"nextId": 133
+},
+"133": {
+"costVal": 106330,
+"id": 133,
+"nextId": 134
+},
+"134": {
+"costVal": 108130,
+"id": 134,
+"nextId": 135
+},
+"135": {
+"costVal": 109950,
+"id": 135,
+"nextId": 136
+},
+"136": {
+"costVal": 111790,
+"id": 136,
+"nextId": 137
+},
+"137": {
+"costVal": 113650,
+"id": 137,
+"nextId": 138
+},
+"138": {
+"costVal": 115530,
+"id": 138,
+"nextId": 139
+},
+"139": {
+"costVal": 117430,
+"id": 139,
+"nextId": 140
+},
+"14": {
+"costVal": 3210,
+"id": 14,
+"nextId": 15,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"18",
+"副本",
+"DupWin"
+]
+]
+},
+"140": {
+"costVal": 119350,
+"id": 140,
+"nextId": 141
+},
+"141": {
+"costVal": 121290,
+"id": 141,
+"nextId": 142
+},
+"142": {
+"costVal": 123250,
+"id": 142,
+"nextId": 143
+},
+"143": {
+"costVal": 125230,
+"id": 143,
+"nextId": 144
+},
+"144": {
+"costVal": 127230,
+"id": 144,
+"nextId": 145
+},
+"145": {
+"costVal": 129250,
+"id": 145,
+"nextId": 146
+},
+"146": {
+"costVal": 131290,
+"id": 146,
+"nextId": 147
+},
+"147": {
+"costVal": 133350,
+"id": 147,
+"nextId": 148
+},
+"148": {
+"costVal": 135430,
+"id": 148,
+"nextId": 149
+},
+"149": {
+"costVal": 137530,
+"id": 149,
+"nextId": 150
+},
+"15": {
+"costVal": 3450,
+"id": 15,
+"nextId": 16,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"19",
+"副本",
+"DupWin"
+]
+]
+},
+"150": {
+"costVal": 139650,
+"id": 150,
+"nextId": 151
+},
+"151": {
+"costVal": 141790,
+"id": 151,
+"nextId": 152
+},
+"152": {
+"costVal": 143950,
+"id": 152,
+"nextId": 153
+},
+"153": {
+"costVal": 146130,
+"id": 153,
+"nextId": 154
+},
+"154": {
+"costVal": 148330,
+"id": 154,
+"nextId": 155
+},
+"155": {
+"costVal": 150550,
+"id": 155,
+"nextId": 156
+},
+"156": {
+"costVal": 152790,
+"id": 156,
+"nextId": 157
+},
+"157": {
+"costVal": 155050,
+"id": 157,
+"nextId": 158
+},
+"158": {
+"costVal": 157330,
+"id": 158,
+"nextId": 159
+},
+"159": {
+"costVal": 159630,
+"id": 159,
+"nextId": 160
+},
+"16": {
+"costVal": 3700,
+"id": 16,
+"nextId": 17
+},
+"160": {
+"costVal": 161950,
+"id": 160,
+"nextId": 161
+},
+"161": {
+"costVal": 164290,
+"id": 161,
+"nextId": 162
+},
+"162": {
+"costVal": 166650,
+"id": 162,
+"nextId": 163
+},
+"163": {
+"costVal": 169030,
+"id": 163,
+"nextId": 164
+},
+"164": {
+"costVal": 171430,
+"id": 164,
+"nextId": 165
+},
+"165": {
+"costVal": 173850,
+"id": 165,
+"nextId": 166
+},
+"166": {
+"costVal": 176290,
+"id": 166,
+"nextId": 167
+},
+"167": {
+"costVal": 178750,
+"id": 167,
+"nextId": 168
+},
+"168": {
+"costVal": 181230,
+"id": 168,
+"nextId": 169
+},
+"169": {
+"costVal": 183730,
+"id": 169,
+"nextId": 170
+},
+"17": {
+"costVal": 3960,
+"id": 17,
+"nextId": 18
+},
+"170": {
+"costVal": 186250,
+"id": 170,
+"nextId": 171
+},
+"171": {
+"costVal": 188790,
+"id": 171,
+"nextId": 172
+},
+"172": {
+"costVal": 191350,
+"id": 172,
+"nextId": 173
+},
+"173": {
+"costVal": 193930,
+"id": 173,
+"nextId": 174
+},
+"174": {
+"costVal": 196530,
+"id": 174,
+"nextId": 175
+},
+"175": {
+"costVal": 199150,
+"id": 175,
+"nextId": 176
+},
+"176": {
+"costVal": 201790,
+"id": 176,
+"nextId": 177
+},
+"177": {
+"costVal": 204450,
+"id": 177,
+"nextId": 178
+},
+"178": {
+"costVal": 207450,
+"id": 178,
+"nextId": 179
+},
+"179": {
+"costVal": 210650,
+"id": 179,
+"nextId": 180
+},
+"18": {
+"costVal": 4230,
+"id": 18,
+"nextId": 19
+},
+"180": {
+"costVal": 214050,
+"id": 180,
+"nextId": 181
+},
+"181": {
+"costVal": 217650,
+"id": 181,
+"nextId": 182
+},
+"182": {
+"costVal": 221450,
+"id": 182,
+"nextId": 183
+},
+"183": {
+"costVal": 225450,
+"id": 183,
+"nextId": 184
+},
+"184": {
+"costVal": 229650,
+"id": 184,
+"nextId": 185
+},
+"185": {
+"costVal": 234050,
+"id": 185,
+"nextId": 186
+},
+"186": {
+"costVal": 238650,
+"id": 186,
+"nextId": 187
+},
+"187": {
+"costVal": 243450,
+"id": 187,
+"nextId": 188
+},
+"188": {
+"costVal": 248450,
+"id": 188,
+"nextId": 189
+},
+"189": {
+"costVal": 253650,
+"id": 189,
+"nextId": 190
+},
+"19": {
+"costVal": 4510,
+"id": 19,
+"nextId": 20
+},
+"190": {
+"costVal": 259050,
+"id": 190,
+"nextId": 191
+},
+"191": {
+"costVal": 264650,
+"id": 191,
+"nextId": 192
+},
+"192": {
+"costVal": 270450,
+"id": 192,
+"nextId": 193
+},
+"193": {
+"costVal": 276450,
+"id": 193,
+"nextId": 194
+},
+"194": {
+"costVal": 282650,
+"id": 194,
+"nextId": 195
+},
+"195": {
+"costVal": 289050,
+"id": 195,
+"nextId": 196
+},
+"196": {
+"costVal": 295650,
+"id": 196,
+"nextId": 197
+},
+"197": {
+"costVal": 302450,
+"id": 197,
+"nextId": 198
+},
+"198": {
+"costVal": 309450,
+"id": 198,
+"nextId": 199
+},
+"199": {
+"costVal": 316650,
+"id": 199,
+"nextId": 200
+},
+"2": {
+"costVal": 1110,
+"id": 2,
+"nextId": 3,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"6",
+"副本",
+"DupWin"
+]
+]
+},
+"20": {
+"costVal": 4800,
+"id": 20,
+"nextId": 21
+},
+"200": {
+"id": 200
+},
+"21": {
+"costVal": 5100,
+"id": 21,
+"nextId": 22
+},
+"22": {
+"costVal": 5410,
+"id": 22,
+"nextId": 23
+},
+"23": {
+"costVal": 5730,
+"id": 23,
+"nextId": 24
+},
+"24": {
+"costVal": 6060,
+"id": 24,
+"nextId": 25
+},
+"25": {
+"costVal": 6400,
+"id": 25,
+"nextId": 26
+},
+"26": {
+"costVal": 6750,
+"id": 26,
+"nextId": 27
+},
+"27": {
+"costVal": 7110,
+"id": 27,
+"nextId": 28
+},
+"28": {
+"costVal": 7480,
+"id": 28,
+"nextId": 29
+},
+"29": {
+"costVal": 7860,
+"id": 29,
+"nextId": 30
+},
+"3": {
+"costVal": 1230,
+"id": 3,
+"nextId": 4,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"7",
+"副本",
+"DupWin"
+]
+]
+},
+"30": {
+"costVal": 8250,
+"id": 30,
+"nextId": 31
+},
+"31": {
+"costVal": 8650,
+"id": 31,
+"nextId": 32
+},
+"32": {
+"costVal": 9060,
+"id": 32,
+"nextId": 33
+},
+"33": {
+"costVal": 9480,
+"id": 33,
+"nextId": 34
+},
+"34": {
+"costVal": 9910,
+"id": 34,
+"nextId": 35
+},
+"35": {
+"costVal": 10350,
+"id": 35,
+"nextId": 36
+},
+"36": {
+"costVal": 10800,
+"id": 36,
+"nextId": 37
+},
+"37": {
+"costVal": 11260,
+"id": 37,
+"nextId": 38
+},
+"38": {
+"costVal": 11730,
+"id": 38,
+"nextId": 39
+},
+"39": {
+"costVal": 12210,
+"id": 39,
+"nextId": 40
+},
+"4": {
+"costVal": 1360,
+"id": 4,
+"nextId": 5,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"8",
+"副本",
+"DupWin"
+]
+]
+},
+"40": {
+"costVal": 12700,
+"id": 40,
+"nextId": 41
+},
+"41": {
+"costVal": 13200,
+"id": 41,
+"nextId": 42
+},
+"42": {
+"costVal": 13710,
+"id": 42,
+"nextId": 43
+},
+"43": {
+"costVal": 14230,
+"id": 43,
+"nextId": 44
+},
+"44": {
+"costVal": 14760,
+"id": 44,
+"nextId": 45
+},
+"45": {
+"costVal": 15300,
+"id": 45,
+"nextId": 46
+},
+"46": {
+"costVal": 15850,
+"id": 46,
+"nextId": 47
+},
+"47": {
+"costVal": 16410,
+"id": 47,
+"nextId": 48
+},
+"48": {
+"costVal": 16980,
+"id": 48,
+"nextId": 49
+},
+"49": {
+"costVal": 17560,
+"id": 49,
+"nextId": 50
+},
+"5": {
+"costVal": 1500,
+"id": 5,
+"nextId": 6,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"9",
+"副本",
+"DupWin"
+]
+]
+},
+"50": {
+"costVal": 18150,
+"id": 50,
+"nextId": 51
+},
+"51": {
+"costVal": 18750,
+"id": 51,
+"nextId": 52
+},
+"52": {
+"costVal": 19360,
+"id": 52,
+"nextId": 53
+},
+"53": {
+"costVal": 19980,
+"id": 53,
+"nextId": 54
+},
+"54": {
+"costVal": 20610,
+"id": 54,
+"nextId": 55
+},
+"55": {
+"costVal": 21250,
+"id": 55,
+"nextId": 56
+},
+"56": {
+"costVal": 21900,
+"id": 56,
+"nextId": 57
+},
+"57": {
+"costVal": 22560,
+"id": 57,
+"nextId": 58
+},
+"58": {
+"costVal": 23230,
+"id": 58,
+"nextId": 59
+},
+"59": {
+"costVal": 23910,
+"id": 59,
+"nextId": 60
+},
+"6": {
+"costVal": 1650,
+"id": 6,
+"nextId": 7,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"10",
+"副本",
+"DupWin"
+]
+]
+},
+"60": {
+"costVal": 24600,
+"id": 60,
+"nextId": 61
+},
+"61": {
+"costVal": 25300,
+"id": 61,
+"nextId": 62
+},
+"62": {
+"costVal": 26010,
+"id": 62,
+"nextId": 63
+},
+"63": {
+"costVal": 26730,
+"id": 63,
+"nextId": 64
+},
+"64": {
+"costVal": 27460,
+"id": 64,
+"nextId": 65
+},
+"65": {
+"costVal": 28200,
+"id": 65,
+"nextId": 66
+},
+"66": {
+"costVal": 28950,
+"id": 66,
+"nextId": 67
+},
+"67": {
+"costVal": 29710,
+"id": 67,
+"nextId": 68
+},
+"68": {
+"costVal": 30480,
+"id": 68,
+"nextId": 69
+},
+"69": {
+"costVal": 31260,
+"id": 69,
+"nextId": 70
+},
+"7": {
+"costVal": 1810,
+"id": 7,
+"nextId": 8,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"11",
+"副本",
+"DupWin"
+]
+]
+},
+"70": {
+"costVal": 32050,
+"id": 70,
+"nextId": 71
+},
+"71": {
+"costVal": 32850,
+"id": 71,
+"nextId": 72
+},
+"72": {
+"costVal": 33660,
+"id": 72,
+"nextId": 73
+},
+"73": {
+"costVal": 34480,
+"id": 73,
+"nextId": 74
+},
+"74": {
+"costVal": 35310,
+"id": 74,
+"nextId": 75
+},
+"75": {
+"costVal": 36150,
+"id": 75,
+"nextId": 76
+},
+"76": {
+"costVal": 37000,
+"id": 76,
+"nextId": 77
+},
+"77": {
+"costVal": 37860,
+"id": 77,
+"nextId": 78
+},
+"78": {
+"costVal": 38730,
+"id": 78,
+"nextId": 79
+},
+"79": {
+"costVal": 39610,
+"id": 79,
+"nextId": 80
+},
+"8": {
+"costVal": 1980,
+"id": 8,
+"nextId": 9,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"12",
+"副本",
+"DupWin"
+]
+]
+},
+"80": {
+"costVal": 40500,
+"id": 80,
+"nextId": 81
+},
+"81": {
+"costVal": 41400,
+"id": 81,
+"nextId": 82
+},
+"82": {
+"costVal": 42310,
+"id": 82,
+"nextId": 83
+},
+"83": {
+"costVal": 43230,
+"id": 83,
+"nextId": 84
+},
+"84": {
+"costVal": 44160,
+"id": 84,
+"nextId": 85
+},
+"85": {
+"costVal": 45100,
+"id": 85,
+"nextId": 86
+},
+"86": {
+"costVal": 46050,
+"id": 86,
+"nextId": 87
+},
+"87": {
+"costVal": 47010,
+"id": 87,
+"nextId": 88
+},
+"88": {
+"costVal": 47980,
+"id": 88,
+"nextId": 89
+},
+"89": {
+"costVal": 48960,
+"id": 89,
+"nextId": 90
+},
+"9": {
+"costVal": 2160,
+"id": 9,
+"nextId": 10,
+"scripts": [
+[
+"4",
+"角色",
+"RoleWin",
+"1"
+],
+[
+"4",
+"角色",
+"RoleWin",
+"24",
+"背包",
+"BagWin"
+],
+[
+"13",
+"副本",
+"DupWin"
+]
+]
+},
+"90": {
+"costVal": 49950,
+"id": 90,
+"nextId": 91
+},
+"91": {
+"costVal": 50950,
+"id": 91,
+"nextId": 92
+},
+"92": {
+"costVal": 51960,
+"id": 92,
+"nextId": 93
+},
+"93": {
+"costVal": 52980,
+"id": 93,
+"nextId": 94
+},
+"94": {
+"costVal": 54010,
+"id": 94,
+"nextId": 95
+},
+"95": {
+"costVal": 55050,
+"id": 95,
+"nextId": 96
+},
+"96": {
+"costVal": 56100,
+"id": 96,
+"nextId": 97
+},
+"97": {
+"costVal": 57160,
+"id": 97,
+"nextId": 98
+},
+"98": {
+"costVal": 58230,
+"id": 98,
+"nextId": 99
+},
+"99": {
+"costVal": 59310,
+"id": 99,
+"nextId": 100
+}
+},
+"SimpleGuildConfig": {
+"foundFamilyNameLimit": 12,
+"foundFamilyNeedLevel": 20,
+"foundFamilyNeedMoneyNum": 100,
+"foundFamilyNeedMoneyType": 2,
+"foundFamilyNeedObjId": 18150064,
+"foundFamilyNeedObjNum": 1
+},
+"TabOpenConfig": {
+"AchieveWin": {
+"2": {
+"funcId": 61,
+"tab": 2,
+"view": "AchieveWin"
+},
+"3": {
+"funcId": 59,
+"tab": 3,
+"view": "AchieveWin"
+}
+},
+"BagWin": {
+"1": {
+"funcId": 60,
+"tab": 1,
+"view": "BagWin"
+}
+},
+"CommonWin": {
+"0": {
+"funcId": 42,
+"tab": 0,
+"view": "CommonWin"
+},
+"1": {
+"funcId": 37,
+"tab": 1,
+"view": "CommonWin"
+},
+"2": {
+"funcId": 37,
+"tab": 2,
+"view": "CommonWin"
+}
+},
+"RoleWin": {
+"1": {
+"funcId": 2,
+"reds": [
+"21"
+],
+"tab": 1,
+"view": "RoleWin"
+},
+"2": {
+"funcId": 2,
+"reds": [
+"1"
+],
+"tab": 2,
+"view": "RoleWin"
+},
+"3": {
+"funcId": 3,
+"reds": [
+"2"
+],
+"tab": 3,
+"view": "RoleWin"
+},
+"4": {
+"reds": [
+"3"
+],
+"tab": 4,
+"view": "RoleWin"
+}
+},
+"SzExchangeWin": {
+"1": {
+"funcId": 62,
+"tab": 1,
+"view": "SzExchangeWin"
+}
+}
+}
+}

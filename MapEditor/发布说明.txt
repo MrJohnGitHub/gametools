@@ -1,0 +1,27 @@
+﻿https://www.cnblogs.com/tinytiny/p/3795126.html
+
+1. 发布的程序:需要访问本地进程，那么只能发布为exe程序才可以。
+   此时supportedProfiles 配置为 extendedDesktop desktop
+   desktop保证能发布air时不会出错，而访问本地进程则需要extendedDesktop
+
+
+2. 本地调试:需要访问本地进程
+   此时supportedProfiles 配置为 extendedDesktop。如果配置为desktop运行会报错，提示没有权限运行本地进程。
+   为了不至于在发布与调试的时候来回改supportedProfiles，调试时supportedProfiles可以配置为extendedDesktop desktop，但要记住顺序不能颠倒。
+   如果配置为desktop extendedDesktop 运行时就会报错。
+   
+  所以，只需将supportedProfiles配置为 extendedDesktop desktop，那么在调试与发布时都能访问本地进程了。
+  Air程序是没有权限访问本地进程，只能将其打包为exe才可以。
+  
+3. 打包air为exe命令行
+a.先配置系统环境变量path：C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.5.0\bin 这样就可以用adt命令
+b.使用命令行找到你air程序存放路径输入以下命令：
+
+adt -package -target native MapEditor.exe MapEditor.air
+如果myAirApp.air没有配置extendedDesktop，则打包为exe会失败
+ 
+Adobe官网参考:
+1. 设置配置文件
+http://help.adobe.com/zh_CN/air/build/WS144092a96ffef7cc16ddeea2126bb46b82f-8000.html
+2. 如何发布为exe文件
+http://help.adobe.com/zh_CN/air/build/WS789ea67d3e73a8b22388411123785d839c-8000.html

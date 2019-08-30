@@ -1,0 +1,23 @@
+{
+"SzExchangeWin":{
+	"1":{"view":"SzExchangeWin","tab":1,"funcId":62}
+},
+"CommonWin":{
+	"2":{"view":"CommonWin","tab":2,"funcId":37},
+	"0":{"view":"CommonWin","tab":0,"funcId":42},
+	"1":{"view":"CommonWin","tab":1,"funcId":37}
+},
+"RoleWin":{
+	"1":{"view":"RoleWin","tab":1,"funcId":2,"reds":["21"]},
+	"2":{"view":"RoleWin","tab":2,"funcId":2,"reds":["1"]},
+	"3":{"view":"RoleWin","tab":3,"funcId":3,"reds":["2"]},
+	"4":{"view":"RoleWin","tab":4,"reds":["3"]}
+},
+"AchieveWin":{
+	"2":{"view":"AchieveWin","tab":2,"funcId":61},
+	"3":{"view":"AchieveWin","tab":3,"funcId":59}
+},
+"BagWin":{
+	"1":{"view":"BagWin","tab":1,"funcId":60}
+}
+}
